@@ -48,12 +48,15 @@
   .url-fetch-btn:disabled { background:var(--surface2); color:var(--muted); cursor:not-allowed; }
 
   .sample-links { padding:12px 16px; display:flex; flex-direction:column; gap:6px; }
-  .sample-label { font-size:10px; color:var(--muted); margin-bottom:2px; }
-  .sample-link { display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--surface2); border-radius:8px; cursor:pointer; transition:background 0.15s; border:0.5px solid transparent; }
-  .sample-link:hover { border-color:rgba(255,92,0,0.3); background:#222; }
-  .sample-link-icon { font-size:14px; flex-shrink:0; }
-  .sample-link-text { font-size:12px; color:var(--muted); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .sample-link-arrow { font-size:10px; color:var(--accent); flex-shrink:0; }
+  .sample-label { font-size:10px; color:var(--muted); margin-bottom:8px; }
+  .sample-thumb-card { cursor:pointer; border-radius:10px; overflow:hidden; background:var(--surface2); border:0.5px solid var(--border); transition:border-color 0.2s, transform 0.2s; }
+  .sample-thumb-card:hover { border-color:rgba(255,92,0,0.4); transform:translateY(-2px); }
+  .sample-thumb-wrap { position:relative; aspect-ratio:16/9; overflow:hidden; }
+  .sample-thumb-img { width:100%; height:100%; object-fit:cover; display:block; }
+  .sample-thumb-play { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:30px; height:30px; background:rgba(0,0,0,0.55); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.3); }
+  .sample-yt-link { position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.6); color:white; font-size:10px; padding:2px 7px; border-radius:6px; text-decoration:none; border:0.5px solid rgba(255,255,255,0.2); }
+  .sample-yt-link:hover { background:var(--accent); }
+  .sample-thumb-title { font-size:11px; font-weight:500; padding:6px 8px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   /* LOADING STATE */
   .loading-state { padding:28px 20px; text-align:center; display:none; }
@@ -120,15 +123,15 @@
   .wl-empty-icon { font-size:36px; margin-bottom:12px; }
   .wl-items { padding:0 20px; display:flex; flex-direction:column; gap:10px; }
   .wl-card { background:var(--surface); border:0.5px solid var(--border); border-radius:14px; overflow:hidden; }
-  .wl-card-head { display:flex; gap:12px; padding:12px 14px; border-bottom:0.5px solid var(--border); }
-  .wl-thumb { width:54px; height:54px; object-fit:cover; border-radius:8px; background:var(--surface2); flex-shrink:0; }
+  .wl-card-head { display:flex; gap:12px; padding:12px 14px; border-bottom:0.5px solid var(--border); align-items:center; }
+  .wl-thumb { width:64px; height:64px; object-fit:cover; border-radius:8px; background:var(--surface2); flex-shrink:0; }
   .wl-card-info { flex:1; min-width:0; }
-  .wl-card-title { font-size:13px; font-weight:600; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .wl-card-title { font-size:13px; font-weight:600; margin-bottom:3px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; line-height:1.4; }
   .wl-card-meta { font-size:11px; color:var(--muted); }
   .wl-card-actions { display:flex; gap:6px; padding:10px 14px; }
-  .wl-order-btn { flex:1; padding:9px; background:rgba(255,92,0,0.08); border:0.5px solid rgba(255,92,0,0.25); color:var(--accent); font-size:12px; font-weight:600; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+  .wl-order-btn { flex:1; padding:10px; background:rgba(255,92,0,0.08); border:0.5px solid rgba(255,92,0,0.25); color:var(--accent); font-size:12px; font-weight:600; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
   .wl-order-btn:hover { background:rgba(255,92,0,0.15); }
-  .wl-remove-btn { padding:9px 14px; background:var(--surface2); border:0.5px solid var(--border); color:var(--muted); font-size:12px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .wl-remove-btn { padding:10px 14px; background:var(--surface2); border:0.5px solid var(--border); color:var(--muted); font-size:12px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
 
   /* SMART GROUPING */
   .group-section { padding:0 20px; margin-top:16px; }
@@ -143,6 +146,34 @@
   .group-order-btn { margin:10px 14px 12px; padding:10px; background:rgba(255,92,0,0.08); border:0.5px solid rgba(255,92,0,0.25); color:var(--accent); font-size:12px; font-weight:600; border-radius:9px; cursor:pointer; width:calc(100% - 28px); font-family:'DM Sans',sans-serif; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:5px; }
   .group-order-btn:hover { background:rgba(255,92,0,0.15); }
 
+
+  /* ORDER SUMMARY MODAL */
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:200; display:none; align-items:flex-end; justify-content:center; }
+  .modal-overlay.show { display:flex; animation:fadeIn 0.2s; }
+  .modal-sheet { background:var(--surface); border-radius:20px 20px 0 0; width:100%; max-width:480px; padding:0 0 24px; max-height:85vh; overflow-y:auto; }
+  .modal-sheet::-webkit-scrollbar { display:none; }
+  .modal-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:12px auto 16px; }
+  .modal-title { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; padding:0 20px; margin-bottom:4px; }
+  .modal-sub { font-size:12px; color:var(--muted); padding:0 20px; margin-bottom:16px; }
+  .modal-items { padding:0 20px; display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+  .modal-item { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:var(--surface2); border-radius:9px; }
+  .modal-item-name { font-size:13px; }
+  .modal-item-right { display:flex; align-items:center; gap:10px; }
+  .modal-item-qty { font-size:11px; color:var(--muted); }
+  .modal-item-price { font-size:12px; font-weight:500; }
+  .modal-divider { height:0.5px; background:var(--border); margin:0 20px 14px; }
+  .modal-total-row { display:flex; justify-content:space-between; align-items:center; padding:0 20px; margin-bottom:6px; }
+  .modal-total-label { font-size:13px; color:var(--muted); }
+  .modal-total-val { font-size:13px; font-weight:500; }
+  .modal-total-row.grand { margin-bottom:16px; }
+  .modal-total-row.grand .modal-total-label { font-size:15px; font-weight:600; color:var(--text); }
+  .modal-total-row.grand .modal-total-val { font-size:18px; font-weight:700; color:var(--accent); }
+  .modal-actions { padding:0 20px; display:flex; flex-direction:column; gap:8px; }
+  .modal-confirm-btn { width:100%; padding:14px; background:var(--accent); color:white; font-size:14px; font-weight:600; border:none; border-radius:12px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+  .modal-confirm-btn:hover { background:#FF7A2E; }
+  .modal-cancel-btn { width:100%; padding:12px; background:transparent; color:var(--muted); font-size:13px; border:0.5px solid var(--border); border-radius:12px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .modal-platform { display:flex; align-items:center; gap:8px; padding:10px 20px; background:var(--green-bg); border-radius:10px; margin:0 20px 14px; }
+  .modal-platform-text { font-size:12px; color:var(--green); font-weight:500; }
   /* TOAST */
   .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(16px); background:var(--green); color:white; padding:9px 18px; border-radius:18px; font-size:12px; font-weight:600; opacity:0; transition:all 0.25s; z-index:999; white-space:nowrap; pointer-events:none; }
   .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
@@ -176,28 +207,47 @@
       <button class="url-fetch-btn" id="fetch-btn" onclick="fetchReel()">Extract</button>
     </div>
     <div class="sample-links">
-      <div class="sample-label">Try these examples</div>
-      <div class="sample-link" onclick="fillAndFetch('https://www.youtube.com/shorts/QAPb7HbPuF4')">
-        <div class="sample-link-icon">▶</div>
-        <div class="sample-link-text">youtube.com/shorts/QAPb7HbPuF4 — Chicken Biryani</div>
-        <div class="sample-link-arrow">↗</div>
+      <div class="sample-label">Trending food reels — tap to load</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+
+        <div class="sample-thumb-card" onclick="fillAndFetch('https://www.youtube.com/shorts/QAPb7HbPuF4')">
+          <div class="sample-thumb-wrap">
+            <img src="https://img.youtube.com/vi/QAPb7HbPuF4/mqdefault.jpg" class="sample-thumb-img" alt="Chicken Biryani">
+            <div class="sample-thumb-play"><div class="play-tri"></div></div>
+            <a href="https://www.youtube.com/shorts/QAPb7HbPuF4" target="_blank" onclick="event.stopPropagation()" class="sample-yt-link">↗</a>
+          </div>
+          <div class="sample-thumb-title">Chicken Biryani</div>
+        </div>
+
+        <div class="sample-thumb-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=tnvz3uA0vMY')">
+          <div class="sample-thumb-wrap">
+            <img src="https://img.youtube.com/vi/tnvz3uA0vMY/mqdefault.jpg" class="sample-thumb-img" alt="Shakshuka">
+            <div class="sample-thumb-play"><div class="play-tri"></div></div>
+            <a href="https://www.youtube.com/watch?v=tnvz3uA0vMY" target="_blank" onclick="event.stopPropagation()" class="sample-yt-link">↗</a>
+          </div>
+          <div class="sample-thumb-title">Perfect Shakshuka</div>
+        </div>
+
+        <div class="sample-thumb-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=DOjNC_BkZiM')">
+          <div class="sample-thumb-wrap">
+            <img src="https://img.youtube.com/vi/DOjNC_BkZiM/mqdefault.jpg" class="sample-thumb-img" alt="Authentic Biryani">
+            <div class="sample-thumb-play"><div class="play-tri"></div></div>
+            <a href="https://www.youtube.com/watch?v=DOjNC_BkZiM" target="_blank" onclick="event.stopPropagation()" class="sample-yt-link">↗</a>
+          </div>
+          <div class="sample-thumb-title">Authentic Biryani</div>
+        </div>
+
+        <div class="sample-thumb-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=nf57BA3i5Rg')">
+          <div class="sample-thumb-wrap">
+            <img src="https://img.youtube.com/vi/nf57BA3i5Rg/mqdefault.jpg" class="sample-thumb-img" alt="Easy Biryani">
+            <div class="sample-thumb-play"><div class="play-tri"></div></div>
+            <a href="https://www.youtube.com/watch?v=nf57BA3i5Rg" target="_blank" onclick="event.stopPropagation()" class="sample-yt-link">↗</a>
+          </div>
+          <div class="sample-thumb-title">Easy Biryani</div>
+        </div>
+
       </div>
-      <div class="sample-link" onclick="fillAndFetch('https://www.youtube.com/watch?v=tnvz3uA0vMY')">
-        <div class="sample-link-icon">▶</div>
-        <div class="sample-link-text">youtube.com/watch?v=tnvz3uA0vMY — Shakshuka</div>
-        <div class="sample-link-arrow">↗</div>
-      </div>
-      <div class="sample-link" onclick="fillAndFetch('https://www.youtube.com/watch?v=DOjNC_BkZiM')">
-        <div class="sample-link-icon">▶</div>
-        <div class="sample-link-text">youtube.com/watch?v=DOjNC_BkZiM — Authentic Biryani</div>
-        <div class="sample-link-arrow">↗</div>
-      </div>
-      <div class="sample-link" onclick="fillAndFetch('https://www.youtube.com/watch?v=nf57BA3i5Rg')">
-        <div class="sample-link-icon">▶</div>
-        <div class="sample-link-text">youtube.com/watch?v=nf57BA3i5Rg — Easy Biryani</div>
-        <div class="sample-link-arrow">↗</div>
-      </div>
-    </div>
+    </div></div>
   </div>
 
   <div class="loading-state" id="loading-state">
@@ -250,32 +300,33 @@
 <div class="tab-content" id="tab-wishlist">
   <div class="wl-header">
     <div class="wl-title">Wishlist</div>
-    <div class="wl-sub">Recipes saved for later</div>
+    <div class="wl-sub">Save recipes to order later</div>
   </div>
+
+  <!-- Paste URL directly in wishlist -->
+  <div style="margin:0 20px 16px;">
+    <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
+        <div style="font-size:16px;flex-shrink:0;">🔗</div>
+        <input id="wl-url-input" type="url" placeholder="Paste YouTube link to save..." style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;" />
+        <button onclick="saveFromUrl()" style="background:var(--accent);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;">Save</button>
+      </div>
+    </div>
+  </div>
+
   <div id="wl-empty" class="wl-empty">
     <div class="wl-empty-icon">🔖</div>
     <div>No saved recipes yet</div>
-    <div style="font-size:11px;margin-top:4px;">Paste a reel link and tap Save</div>
+    <div style="font-size:11px;margin-top:4px;">Paste a link above or tap Save on any recipe</div>
   </div>
+
   <div class="wl-items" id="wl-items"></div>
+
   <div id="group-section" class="group-section" style="display:none;">
-    <div class="group-label">Smart grouping</div>
+    <div class="group-label">Smart grouping — order all at once</div>
     <div id="group-cards"></div>
   </div>
 </div>
-
-<div class="bottom-nav">
-  <div class="bnav-item active" id="bnav-scan" onclick="switchTab('scan')">
-    <div class="bnav-icon">🔍</div>
-    <div class="bnav-label">Scan reel</div>
-  </div>
-  <div class="bnav-item" id="bnav-wishlist" onclick="switchTab('wishlist')">
-    <div class="bnav-icon">🔖</div>
-    <div class="bnav-label">Wishlist</div>
-  </div>
-
-</div>
-
 
 <!-- ═══ TAB: SETTINGS ═══ -->
 <div class="tab-content" id="tab-settings">
@@ -315,6 +366,30 @@
     <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:10px;">
       <div style="font-size:12px;font-weight:600;margin-bottom:6px;">Key stored locally</div>
       <div style="font-size:12px;color:var(--muted);line-height:1.5;">Your API key is saved only in this browser's local storage. It never leaves your device except to call Anthropic's API directly.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER SUMMARY MODAL -->
+<div class="modal-overlay" id="order-modal" onclick="closeModalOnBg(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Order summary</div>
+    <div class="modal-sub" id="modal-sub">2 servings · Delivered in ~10 mins</div>
+    <div class="modal-platform">
+      <div style="font-size:16px;">🛒</div>
+      <div class="modal-platform-text">Will be ordered via Swiggy Instamart</div>
+    </div>
+    <div class="modal-items" id="modal-items"></div>
+    <div class="modal-divider"></div>
+    <div class="modal-total-row"><div class="modal-total-label">Subtotal</div><div class="modal-total-val" id="modal-subtotal">₹0</div></div>
+    <div class="modal-total-row"><div class="modal-total-label">Delivery fee</div><div class="modal-total-val">₹25</div></div>
+    <div class="modal-total-row"><div class="modal-total-label">Platform fee</div><div class="modal-total-val">₹5</div></div>
+    <div class="modal-divider"></div>
+    <div class="modal-total-row grand"><div class="modal-total-label">Total</div><div class="modal-total-val" id="modal-total">₹0</div></div>
+    <div class="modal-actions">
+      <button class="modal-confirm-btn" onclick="confirmOrder()">Confirm & go to Instamart</button>
+      <button class="modal-cancel-btn" onclick="closeModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -583,13 +658,74 @@ function toggleCheck(i) {
     : '';
 }
 
+// Realistic prices for common ingredients (₹ per standard unit)
+const PRICES = {
+  'g':      (name) => name.includes('chicken') ? 0.28 : name.includes('rice') || name.includes('basmati') ? 0.12 : name.includes('yogurt') ? 0.08 : name.includes('cheese') || name.includes('feta') || name.includes('parmesan') ? 0.6 : name.includes('flour') ? 0.06 : name.includes('lentil') || name.includes('dal') ? 0.1 : 0.15,
+  'pcs':    (name) => name.includes('egg') ? 8 : name.includes('onion') ? 12 : name.includes('tomato') ? 10 : name.includes('pepper') || name.includes('capsicum') ? 20 : name.includes('garlic') ? 3 : name.includes('chilli') ? 3 : name.includes('lemon') || name.includes('lime') ? 8 : 15,
+  'tbsp':   () => 4,
+  'tsp':    () => 2,
+  'ml':     () => 0.08,
+  'pinch':  () => 2,
+  'to taste': () => 3,
+  'default': () => 20
+};
+
+function estimatePrice(ing) {
+  const name = ing.name.toLowerCase();
+  const unit = (ing.unit || '').toLowerCase();
+  const priceFn = PRICES[unit] || PRICES['default'];
+  const basePrice = typeof priceFn === 'function' ? priceFn(name) : priceFn;
+  return Math.round(ing.qty * basePrice);
+}
+
 function addToCart() {
-  document.getElementById('cart-txt').textContent = 'Adding to Instamart...';
+  // Show order summary modal
+  const scaledIngredients = currentIngredients.map(ing => ({
+    ...ing,
+    scaledQty: (ing.qty / currentBaseServings) * currentServings,
+    price: Math.round(estimatePrice({...ing, qty: (ing.qty / currentBaseServings) * currentServings}))
+  }));
+
+  const subtotal = scaledIngredients.reduce((sum, i) => sum + i.price, 0);
+  const total = subtotal + 25 + 5;
+
+  document.getElementById('modal-sub').textContent = currentServings + ' serving' + (currentServings > 1 ? 's' : '') + ' · ' + currentIngredients.length + ' items · Delivered in ~10 mins';
+  document.getElementById('modal-subtotal').textContent = '₹' + subtotal;
+  document.getElementById('modal-total').textContent = '₹' + total;
+
+  const countUnits = ['pcs','piece','pieces','clove','cloves','medium','large','small','pcs'];
+  document.getElementById('modal-items').innerHTML = scaledIngredients.map(ing => {
+    const isCount = countUnits.includes((ing.unit||'').toLowerCase());
+    const scaledRounded = isCount ? Math.max(1, Math.round(ing.scaledQty)) : (ing.scaledQty >= 10 ? Math.round(ing.scaledQty) : Math.round(ing.scaledQty * 2) / 2);
+    const qtyStr = (ing.unit === 'pinch' || ing.unit === 'to taste') ? ing.unit : scaledRounded + ' ' + ing.unit;
+    return `<div class="modal-item">
+      <div class="modal-item-name">${ing.name}</div>
+      <div class="modal-item-right">
+        <div class="modal-item-qty">${qtyStr}</div>
+        <div class="modal-item-price">₹${ing.price}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('order-modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('order-modal').classList.remove('show');
+}
+
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('order-modal')) closeModal();
+}
+
+function confirmOrder() {
+  closeModal();
+  document.getElementById('cart-btn').classList.add('success');
+  document.getElementById('cart-txt').textContent = 'Opening Instamart... ↗';
+  showToast('🛒 Redirecting to Instamart!');
   setTimeout(() => {
-    document.getElementById('cart-btn').classList.add('success');
-    document.getElementById('cart-txt').textContent = 'Cart filled! Delivery in ~10 mins ↗';
-    showToast('🛒 ' + currentIngredients.length + ' items added to Instamart!');
-  }, 1000);
+    window.open('https://www.swiggy.com/instamart', '_blank');
+  }, 600);
 }
 
 function saveToWishlist() {
@@ -666,13 +802,59 @@ function renderSmartGroups() {
 }
 
 function orderWishlist(i) {
-  showToast('🛒 ' + wishlist[i].ingredients.length + ' items added to Instamart!');
+  const item = wishlist[i];
+  currentIngredients = item.ingredients;
+  currentServings = item.servings || 2;
+  currentBaseServings = 2;
+  currentMeta = item;
+  addToCart();
 }
 
 function removeWishlist(i) {
   wishlist.splice(i, 1);
   renderWishlist();
   showToast('Removed from wishlist');
+}
+
+async function saveFromUrl() {
+  const url = document.getElementById('wl-url-input').value.trim();
+  if (!url) { showToast('Paste a YouTube link first'); return; }
+
+  const ytId = extractYouTubeId(url);
+  if (!ytId) { showToast('Only YouTube links supported for now'); return; }
+
+  const existing = wishlist.find(w => w.ytId === ytId);
+  if (existing) { showToast('Already in wishlist!'); return; }
+
+  const btn = document.querySelector('#tab-wishlist button[onclick="saveFromUrl()"]');
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  try {
+    let title = 'Food Recipe';
+    let author = 'YouTube';
+    const proxyUrls = [
+      `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`,
+      `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${ytId}&format=json`,
+    ];
+    for (const proxyUrl of proxyUrls) {
+      try {
+        const r = await fetch(proxyUrl);
+        if (r.ok) { const d = await r.json(); title = d.title || title; author = d.author_name || author; break; }
+      } catch(e) { continue; }
+    }
+    const thumbUrl = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
+    const ingredients = await parseIngredientsWithAI(title, author, ytId);
+    wishlist.push({ title, author, thumbUrl, ytId, ingredients, servings: 2 });
+    document.getElementById('wl-url-input').value = '';
+    renderWishlist();
+    showToast('Saved to Wishlist!');
+  } catch(e) {
+    showToast('Could not fetch — check the link');
+  }
+
+  btn.textContent = 'Save';
+  btn.disabled = false;
 }
 
 function fillAndFetch(url) {
