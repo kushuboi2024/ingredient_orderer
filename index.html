@@ -3,16 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Recipe Reel — Cook what you scroll</title>
+<title>Recipe Reel — Cook & Shop what you scroll</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0D0D0D; --surface:#161616; --surface2:#1E1E1E;
-  --border:rgba(255,255,255,0.08); --accent:#FF5C00;
-  --text:#F5F0E8; --muted:rgba(245,240,232,0.45);
-  --green:#2ECC71; --green-bg:rgba(46,204,113,0.1);
+:root{
+  --bg:#0D0D0D;--surface:#161616;--surface2:#1E1E1E;
+  --border:rgba(255,255,255,0.08);--accent:#FF5C00;
+  --text:#F5F0E8;--muted:rgba(245,240,232,0.45);
+  --green:#2ECC71;--green-bg:rgba(46,204,113,0.1);
+  --pink:#E91E8C;--pink-bg:rgba(233,30,140,0.1);
+  --blue:#378ADD;--blue-bg:rgba(55,138,221,0.1);
+  --amber:#EF9F27;--amber-bg:rgba(239,159,39,0.1);
+  --purple:#7F77DD;--purple-bg:rgba(127,119,221,0.1);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
 
 nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-filter:blur(16px);border-bottom:0.5px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;}
@@ -23,7 +28,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 
 .tab-content{display:none;padding-bottom:80px;}
 .tab-content.active{display:block;}
-
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,13,0.95);backdrop-filter:blur(16px);border-top:0.5px solid var(--border);display:flex;padding:7px 0 12px;z-index:100;}
 .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;}
 .bnav-icon{font-size:19px;}
@@ -31,41 +35,53 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 .bnav-item.active .bnav-label{color:var(--accent);}
 
 /* HERO */
-.scan-hero{padding:28px 20px 16px;text-align:center;}
-.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,0.1);border:0.5px solid rgba(255,92,0,0.25);color:var(--accent);font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+.scan-hero{padding:24px 20px 14px;text-align:center;}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,0.1);border:0.5px solid rgba(255,92,0,0.25);color:var(--accent);font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;margin-bottom:12px;}
 .scan-hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,6vw,40px);font-weight:700;line-height:1.1;letter-spacing:-0.5px;margin-bottom:8px;}
 .scan-hero h1 span{color:var(--accent);}
 .scan-hero p{font-size:13px;color:var(--muted);max-width:320px;margin:0 auto;line-height:1.6;}
 
+/* CATEGORY TOGGLE */
+.cat-toggle{display:flex;gap:8px;padding:14px 20px 0;overflow-x:auto;scrollbar-width:none;}
+.cat-toggle::-webkit-scrollbar{display:none;}
+.cat-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.cat-btn.active-food{background:rgba(255,92,0,0.12);border-color:rgba(255,92,0,0.35);color:var(--accent);}
+.cat-btn.active-beauty{background:var(--pink-bg);border-color:rgba(233,30,140,0.35);color:var(--pink);}
+
 /* URL BOX */
-.url-box{margin:16px 20px;background:var(--surface);border:0.5px solid var(--border);border-radius:18px;overflow:hidden;}
+.url-box{margin:14px 20px;background:var(--surface);border:0.5px solid var(--border);border-radius:16px;overflow:hidden;}
 .url-input-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:0.5px solid var(--border);}
 .url-icon{font-size:16px;flex-shrink:0;}
 .url-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;}
 .url-input::placeholder{color:var(--muted);}
-.url-fetch-btn{background:var(--accent);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all 0.2s;flex-shrink:0;}
+.url-fetch-btn{border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;transition:all 0.2s;}
 .url-fetch-btn:disabled{background:var(--surface2);color:var(--muted);cursor:not-allowed;}
+.btn-food{background:var(--accent);color:white;}
+.btn-beauty{background:var(--pink);color:white;}
 
-/* THUMBNAIL GRID — portrait style like Instagram */
-.thumb-grid-label{font-size:10px;color:var(--muted);padding:12px 14px 8px;display:block;}
+/* THUMBNAIL GRID */
+.thumb-section-label{font-size:10px;color:var(--muted);padding:12px 14px 8px;display:block;}
 .thumb-grid{display:flex;gap:10px;padding:0 14px 14px;overflow-x:auto;scrollbar-width:none;}
 .thumb-grid::-webkit-scrollbar{display:none;}
 .thumb-card{flex-shrink:0;width:130px;border-radius:12px;overflow:hidden;background:var(--surface2);border:1.5px solid transparent;cursor:pointer;transition:border-color 0.2s,transform 0.2s;position:relative;}
-.thumb-card:hover{border-color:rgba(255,92,0,0.5);transform:translateY(-2px);}
-.thumb-card.active{border-color:var(--accent);}
+.thumb-card:hover{transform:translateY(-2px);}
+.thumb-card.food-card:hover,.thumb-card.food-card.active{border-color:var(--accent);}
+.thumb-card.beauty-card:hover,.thumb-card.beauty-card.active{border-color:var(--pink);}
 .thumb-img{width:100%;height:180px;object-fit:cover;display:block;}
 .thumb-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-65%);width:32px;height:32px;background:rgba(0,0,0,0.55);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.25);}
 .play-tri{width:0;height:0;border-style:solid;border-width:5px 0 5px 10px;border-color:transparent transparent transparent white;margin-left:2px;}
-.thumb-yt{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.65);color:white;font-size:9px;padding:2px 6px;border-radius:5px;text-decoration:none;border:0.5px solid rgba(255,255,255,0.2);}
-.thumb-yt:hover{background:var(--accent);}
+.thumb-yt{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.65);color:white;font-size:9px;padding:2px 6px;border-radius:5px;text-decoration:none;}
 .thumb-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.85));padding:18px 8px 8px;}
 .thumb-name{font-size:11px;font-weight:600;line-height:1.3;color:white;}
-.thumb-creator{font-size:9px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.thumb-tag{position:absolute;top:6px;left:6px;font-size:9px;font-weight:600;padding:2px 7px;border-radius:6px;}
+.tag-food{background:rgba(255,92,0,0.85);color:white;}
+.tag-beauty{background:rgba(233,30,140,0.85);color:white;}
 
 /* LOADING */
 .loading-state{padding:28px 20px;text-align:center;display:none;}
 .loading-state.show{display:block;}
 .loading-spinner{width:30px;height:30px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
+.loading-spinner.beauty-spin{border-top-color:var(--pink);}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-steps{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
 .loading-step{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;justify-content:center;}
@@ -84,10 +100,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .result-media{position:relative;}
 .result-thumb{width:100%;height:170px;object-fit:cover;display:block;background:var(--surface2);}
-.result-thumb-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:20px 14px 12px;}
+.result-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:20px 14px 12px;}
 .result-dish-name{font-size:15px;font-weight:700;font-family:'Playfair Display',serif;}
 .result-creator{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;}
-.result-platform-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;}
+.result-platform-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.7);border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;}
 .result-body{padding:14px 16px;}
 .result-section-label{font-size:10px;color:var(--muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;}
 .caption-box{background:var(--surface2);border-radius:10px;padding:9px 12px;font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px;border:0.5px solid var(--border);}
@@ -101,70 +117,101 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 .ing-left{display:flex;align-items:center;gap:9px;}
 .ing-check{width:17px;height:17px;border-radius:4px;border:1.5px solid rgba(255,255,255,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
 .ing-check.checked{background:var(--accent);border-color:var(--accent);}
+.ing-check.beauty-check.checked{background:var(--pink);border-color:var(--pink);}
 .ing-qty{font-size:11px;color:var(--muted);white-space:nowrap;}
 .action-row{display:flex;gap:8px;}
-.cart-btn{flex:2;padding:12px;background:var(--accent);color:white;font-size:13px;font-weight:600;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
-.cart-btn:hover{background:#FF7A2E;}
-.cart-btn.success{background:var(--green);}
-.save-btn{flex:1;padding:12px;background:var(--surface2);color:var(--text);font-size:13px;font-weight:600;border:0.5px solid var(--border);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.cart-btn{flex:2;padding:12px;color:white;font-size:13px;font-weight:600;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.cart-btn.success{background:var(--green)!important;}
+.save-btn{flex:1;padding:12px;background:var(--surface2);color:var(--text);font-size:13px;font-weight:600;border:0.5px solid var(--border);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'DM Sans',sans-serif;}
 .save-btn.saved{color:var(--green);border-color:rgba(46,204,113,0.3);}
 
 /* WISHLIST */
-.wl-header{padding:22px 20px 14px;}
+.wl-header{padding:20px 20px 12px;}
 .wl-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;}
 .wl-sub{font-size:12px;color:var(--muted);margin-top:3px;}
 .wl-empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px;}
 .wl-empty-icon{font-size:36px;margin-bottom:12px;}
-.wl-items{padding:0 20px;display:flex;flex-direction:column;gap:10px;}
+.wl-saved-list{padding:0 20px;display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
 .wl-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;}
 .wl-card-head{display:flex;gap:12px;padding:12px 14px;border-bottom:0.5px solid var(--border);align-items:center;}
-.wl-thumb{width:60px;height:60px;object-fit:cover;border-radius:8px;background:var(--surface2);flex-shrink:0;}
+.wl-thumb{width:58px;height:58px;object-fit:cover;border-radius:8px;background:var(--surface2);flex-shrink:0;}
 .wl-card-info{flex:1;min-width:0;}
 .wl-card-title{font-size:13px;font-weight:600;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.4;}
 .wl-card-meta{font-size:11px;color:var(--muted);}
+.wl-card-type{font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px;display:inline-block;margin-top:3px;}
+.type-food{background:rgba(255,92,0,0.1);color:var(--accent);}
+.type-beauty{background:var(--pink-bg);color:var(--pink);}
 .wl-card-actions{display:flex;gap:6px;padding:10px 14px;}
-.wl-order-btn{flex:1;padding:10px;background:rgba(255,92,0,0.08);border:0.5px solid rgba(255,92,0,0.25);color:var(--accent);font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
-.wl-order-btn:hover{background:rgba(255,92,0,0.15);}
+.wl-order-btn{flex:1;padding:10px;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;border:0.5px solid;}
+.wl-order-btn.food-btn{background:rgba(255,92,0,0.08);border-color:rgba(255,92,0,0.25);color:var(--accent);}
+.wl-order-btn.beauty-btn{background:var(--pink-bg);border-color:rgba(233,30,140,0.25);color:var(--pink);}
 .wl-remove-btn{padding:10px 14px;background:var(--surface2);border:0.5px solid var(--border);color:var(--muted);font-size:12px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;}
-.group-section{padding:0 20px;margin-top:16px;}
-.group-label{font-size:10px;color:var(--muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;}
-.group-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:8px;}
-.group-head{padding:12px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.group-left{display:flex;align-items:center;gap:10px;}
-.group-emoji{font-size:20px;}
-.group-name{font-size:13px;font-weight:600;}
-.group-sub{font-size:11px;color:var(--muted);margin-top:2px;}
-.group-badge{font-size:10px;padding:3px 9px;border-radius:8px;background:rgba(255,92,0,0.1);color:var(--accent);font-weight:500;}
-.group-order-btn{margin:10px 14px 12px;padding:10px;background:rgba(255,92,0,0.08);border:0.5px solid rgba(255,92,0,0.25);color:var(--accent);font-size:12px;font-weight:600;border-radius:9px;cursor:pointer;width:calc(100% - 28px);font-family:'DM Sans',sans-serif;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;}
-.group-order-btn:hover{background:rgba(255,92,0,0.15);}
+
+/* CATEGORY CARDS — the star feature */
+.cat-section{padding:0 20px;margin-top:4px;}
+.cat-section-title{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.cat-section-title::after{content:'';flex:1;height:0.5px;background:var(--border);}
+.cat-card{border-radius:16px;overflow:hidden;margin-bottom:12px;border:0.5px solid;}
+.cat-card.food-cat{border-color:rgba(255,92,0,0.2);background:linear-gradient(135deg,rgba(255,92,0,0.06) 0%,var(--surface) 100%);}
+.cat-card.beauty-cat{border-color:rgba(233,30,140,0.2);background:linear-gradient(135deg,rgba(233,30,140,0.06) 0%,var(--surface) 100%);}
+.cat-card-head{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
+.cat-left{display:flex;align-items:center;gap:12px;}
+.cat-icon-wrap{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.food-icon{background:rgba(255,92,0,0.12);}
+.beauty-icon{background:var(--pink-bg);}
+.cat-name{font-size:14px;font-weight:600;}
+.cat-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.cat-save-badge{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:600;white-space:nowrap;}
+.food-badge{background:rgba(255,92,0,0.1);color:var(--accent);}
+.beauty-badge{background:var(--pink-bg);color:var(--pink);}
+.cat-recipes{padding:0 16px;display:flex;flex-direction:column;gap:4px;}
+.cat-recipe-row{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--surface2);border-radius:8px;}
+.cat-recipe-name{font-size:12px;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:8px;}
+.cat-recipe-count{font-size:11px;color:var(--muted);white-space:nowrap;}
+.cat-shared-items{padding:8px 16px 4px;display:flex;flex-wrap:wrap;gap:5px;}
+.cat-item-pill{font-size:10px;padding:3px 9px;border-radius:8px;background:var(--surface2);color:var(--muted);}
+.cat-item-pill.shared{color:var(--green);background:var(--green-bg);}
+.cat-item-pill.more{cursor:pointer;}
+.cat-item-pill.more-food{color:var(--accent);background:rgba(255,92,0,0.08);}
+.cat-item-pill.more-beauty{color:var(--pink);background:var(--pink-bg);}
+.cat-order-row{padding:10px 16px 14px;display:flex;gap:8px;}
+.cat-order-btn{flex:1;padding:11px;font-size:12px;font-weight:600;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;border:0.5px solid;}
+.cat-order-btn.food-order{background:rgba(255,92,0,0.1);border-color:rgba(255,92,0,0.3);color:var(--accent);}
+.cat-order-btn.beauty-order{background:var(--pink-bg);border-color:rgba(233,30,140,0.3);color:var(--pink);}
+.cat-order-btn:hover{opacity:0.8;}
+.cat-total{font-size:11px;color:var(--muted);display:flex;align-items:center;justify-content:center;padding-top:2px;}
 
 /* ORDER SUMMARY MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:flex-end;justify-content:center;}
-.modal-overlay.show{display:flex;animation:fadeIn 0.2s;}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 28px;max-height:88vh;overflow-y:auto;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.show{display:flex;animation:fadein 0.2s;}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 28px;max-height:90vh;overflow-y:auto;}
 .modal-sheet::-webkit-scrollbar{display:none;}
-.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 16px;}
-.modal-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;padding:0 20px;margin-bottom:4px;}
-.modal-sub{font-size:12px;color:var(--muted);padding:0 20px;margin-bottom:14px;}
-.modal-platform{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--green-bg);border-radius:10px;margin:0 20px 14px;}
-.modal-platform-text{font-size:12px;color:var(--green);font-weight:500;}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 14px;}
+.modal-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;padding:0 20px;margin-bottom:3px;}
+.modal-sub{font-size:12px;color:var(--muted);padding:0 20px;margin-bottom:12px;}
+.modal-platform{display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;margin:0 20px 14px;}
+.modal-platform-food{background:var(--green-bg);}
+.modal-platform-beauty{background:var(--pink-bg);}
+.modal-platform-text{font-size:12px;font-weight:500;}
+.modal-platform-text.food-txt{color:var(--green);}
+.modal-platform-text.beauty-txt{color:var(--pink);}
 .modal-items{padding:0 20px;display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
-.modal-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--surface2);border-radius:8px;}
-.modal-item-name{font-size:13px;flex:1;}
-.modal-item-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.modal-item-qty{font-size:11px;color:var(--muted);}
-.modal-item-price{font-size:12px;font-weight:500;min-width:32px;text-align:right;}
+.modal-item{display:flex;align-items:center;padding:8px 12px;background:var(--surface2);border-radius:8px;gap:8px;}
+.modal-item-name{font-size:13px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.modal-item-controls{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.modal-qty-btn{width:22px;height:22px;border-radius:50%;background:var(--surface);border:0.5px solid var(--border);color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.modal-qty-val{font-size:12px;font-weight:600;min-width:28px;text-align:center;}
+.modal-item-price{font-size:12px;font-weight:500;min-width:34px;text-align:right;flex-shrink:0;}
 .modal-divider{height:0.5px;background:var(--border);margin:0 20px 12px;}
-.modal-total-row{display:flex;justify-content:space-between;align-items:center;padding:4px 20px;}
+.modal-total-row{display:flex;justify-content:space-between;padding:3px 20px;}
 .modal-total-label{font-size:13px;color:var(--muted);}
 .modal-total-val{font-size:13px;font-weight:500;}
 .modal-grand{display:flex;justify-content:space-between;align-items:center;padding:10px 20px 16px;}
 .modal-grand-label{font-size:15px;font-weight:600;}
-.modal-grand-val{font-size:20px;font-weight:700;color:var(--accent);}
+.modal-grand-val{font-size:20px;font-weight:700;}
 .modal-actions{padding:0 20px;display:flex;flex-direction:column;gap:8px;}
-.modal-confirm-btn{width:100%;padding:14px;background:var(--accent);color:white;font-size:14px;font-weight:600;border:none;border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
-.modal-confirm-btn:hover{background:#FF7A2E;}
+.modal-confirm-btn{width:100%;padding:14px;color:white;font-size:14px;font-weight:600;border:none;border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
 .modal-cancel-btn{width:100%;padding:12px;background:transparent;color:var(--muted);font-size:13px;border:0.5px solid var(--border);border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;}
 
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--green);color:white;padding:9px 18px;border-radius:18px;font-size:12px;font-weight:600;opacity:0;transition:all 0.25s;z-index:999;white-space:nowrap;pointer-events:none;}
@@ -181,71 +228,100 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 <!-- ═══ SCAN TAB ═══ -->
 <div class="tab-content active" id="tab-scan">
   <div class="scan-hero">
-    <div class="hero-pill"><div style="width:5px;height:5px;background:var(--accent);border-radius:50%;"></div>Paste any food reel link</div>
-    <h1>Saw it.<br><span>Cook it.</span></h1>
-    <p>Share a YouTube Short or food reel. We extract the ingredients and fill your Instamart cart in one tap.</p>
+    <div class="hero-pill"><div style="width:5px;height:5px;background:var(--accent);border-radius:50%;"></div>Paste any reel link</div>
+    <h1>Saw it.<br><span>Get it.</span></h1>
+    <p>Food reels, makeup tutorials — paste any link, get the items, order in one tap.</p>
   </div>
 
-  <div class="url-box">
+  <div class="cat-toggle">
+    <button class="cat-btn active-food" id="cat-food" onclick="setMode('food')">🍳 Food & recipes</button>
+    <button class="cat-btn" id="cat-beauty" onclick="setMode('beauty')">💄 Beauty & makeup</button>
+  </div>
+
+  <div class="url-box" style="margin-top:14px;">
     <div class="url-input-row">
-      <div class="url-icon">🔗</div>
-      <input class="url-input" id="url-input" type="url" placeholder="Paste YouTube Short or reel link..."/>
-      <button class="url-fetch-btn" id="fetch-btn" onclick="fetchReel()">Extract</button>
+      <div class="url-icon" id="url-icon">🔗</div>
+      <input class="url-input" id="url-input" type="url" placeholder="Paste YouTube link here..."/>
+      <button class="url-fetch-btn btn-food" id="fetch-btn" onclick="fetchReel()">Extract</button>
     </div>
-    <span class="thumb-grid-label">Trending food reels — tap to load</span>
-    <div class="thumb-grid">
-      <div class="thumb-card" onclick="fillAndFetch('https://www.youtube.com/shorts/QAPb7HbPuF4')">
-        <img class="thumb-img" src="https://img.youtube.com/vi/QAPb7HbPuF4/mqdefault.jpg" alt="Chicken Biryani">
+    <span class="thumb-section-label" id="thumb-label">Trending food reels — tap to load</span>
+    <div class="thumb-grid" id="food-thumbs">
+      <div class="thumb-card food-card" onclick="fillAndFetch('https://www.youtube.com/shorts/QAPb7HbPuF4')">
+        <img class="thumb-img" src="https://img.youtube.com/vi/QAPb7HbPuF4/mqdefault.jpg" alt="Biryani">
         <div class="thumb-play"><div class="play-tri"></div></div>
-        <a class="thumb-yt" href="https://www.youtube.com/shorts/QAPb7HbPuF4" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+        <a class="thumb-yt" href="https://www.youtube.com/shorts/QAPb7HbPuF4" target="_blank" onclick="event.stopPropagation()">↗</a>
+        <span class="thumb-tag tag-food">🍛</span>
         <div class="thumb-overlay"><div class="thumb-name">Chicken Biryani</div></div>
       </div>
-      <div class="thumb-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=tnvz3uA0vMY')">
+      <div class="thumb-card food-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=tnvz3uA0vMY')">
         <img class="thumb-img" src="https://img.youtube.com/vi/tnvz3uA0vMY/mqdefault.jpg" alt="Shakshuka">
         <div class="thumb-play"><div class="play-tri"></div></div>
-        <a class="thumb-yt" href="https://www.youtube.com/watch?v=tnvz3uA0vMY" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+        <a class="thumb-yt" href="https://www.youtube.com/watch?v=tnvz3uA0vMY" target="_blank" onclick="event.stopPropagation()">↗</a>
+        <span class="thumb-tag tag-food">🍳</span>
         <div class="thumb-overlay"><div class="thumb-name">Perfect Shakshuka</div></div>
       </div>
-      <div class="thumb-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=DOjNC_BkZiM')">
+      <div class="thumb-card food-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=DOjNC_BkZiM')">
         <img class="thumb-img" src="https://img.youtube.com/vi/DOjNC_BkZiM/mqdefault.jpg" alt="Authentic Biryani">
         <div class="thumb-play"><div class="play-tri"></div></div>
-        <a class="thumb-yt" href="https://www.youtube.com/watch?v=DOjNC_BkZiM" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+        <a class="thumb-yt" href="https://www.youtube.com/watch?v=DOjNC_BkZiM" target="_blank" onclick="event.stopPropagation()">↗</a>
+        <span class="thumb-tag tag-food">🍛</span>
         <div class="thumb-overlay"><div class="thumb-name">Authentic Biryani</div></div>
       </div>
-      <div class="thumb-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=nf57BA3i5Rg')">
+      <div class="thumb-card food-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=nf57BA3i5Rg')">
         <img class="thumb-img" src="https://img.youtube.com/vi/nf57BA3i5Rg/mqdefault.jpg" alt="Easy Biryani">
         <div class="thumb-play"><div class="play-tri"></div></div>
-        <a class="thumb-yt" href="https://www.youtube.com/watch?v=nf57BA3i5Rg" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+        <a class="thumb-yt" href="https://www.youtube.com/watch?v=nf57BA3i5Rg" target="_blank" onclick="event.stopPropagation()">↗</a>
+        <span class="thumb-tag tag-food">🍛</span>
         <div class="thumb-overlay"><div class="thumb-name">Easy Biryani</div></div>
+      </div>
+    </div>
+    <div class="thumb-grid" id="beauty-thumbs" style="display:none;">
+      <div class="thumb-card beauty-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=makeup_demo_1','beauty','Everyday Makeup Look')">
+        <div style="width:100%;height:180px;background:linear-gradient(135deg,#3d1030,#8B2252);display:flex;align-items:center;justify-content:center;font-size:40px;">💄</div>
+        <span class="thumb-tag tag-beauty">✨</span>
+        <div class="thumb-overlay"><div class="thumb-name">Everyday Glam Look</div></div>
+      </div>
+      <div class="thumb-card beauty-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=makeup_demo_2','beauty','Dewy Skin Routine')">
+        <div style="width:100%;height:180px;background:linear-gradient(135deg,#1a2a4a,#2d5986);display:flex;align-items:center;justify-content:center;font-size:40px;">🧴</div>
+        <span class="thumb-tag tag-beauty">✨</span>
+        <div class="thumb-overlay"><div class="thumb-name">Dewy Skin Routine</div></div>
+      </div>
+      <div class="thumb-card beauty-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=makeup_demo_3','beauty','Smoky Eye Tutorial')">
+        <div style="width:100%;height:180px;background:linear-gradient(135deg,#1a0a2e,#4a1a6e);display:flex;align-items:center;justify-content:center;font-size:40px;">👁️</div>
+        <span class="thumb-tag tag-beauty">✨</span>
+        <div class="thumb-overlay"><div class="thumb-name">Smoky Eye Tutorial</div></div>
+      </div>
+      <div class="thumb-card beauty-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=makeup_demo_4','beauty','No Makeup Makeup')">
+        <div style="width:100%;height:180px;background:linear-gradient(135deg,#2e1a0a,#7a4a2a);display:flex;align-items:center;justify-content:center;font-size:40px;">🌸</div>
+        <span class="thumb-tag tag-beauty">✨</span>
+        <div class="thumb-overlay"><div class="thumb-name">No-Makeup Makeup</div></div>
       </div>
     </div>
   </div>
 
   <div class="loading-state" id="loading-state">
-    <div class="loading-spinner"></div>
-    <div style="font-size:13px;color:var(--muted);">Fetching reel details...</div>
+    <div class="loading-spinner" id="loading-spinner"></div>
+    <div style="font-size:13px;color:var(--muted);" id="loading-text">Fetching reel details...</div>
     <div class="loading-steps" id="loading-steps"></div>
   </div>
-
   <div class="error-state" id="error-state">
-    <div class="error-title">Couldn't extract ingredients</div>
-    <div class="error-sub" id="error-msg">Try a YouTube link — Instagram links require the user to paste the caption manually.</div>
+    <div class="error-title">Couldn't extract</div>
+    <div class="error-sub" id="error-msg">Try a YouTube link.</div>
   </div>
 
   <div class="result-panel" id="result-panel">
     <div class="result-media">
       <img class="result-thumb" id="result-thumb" src="" alt="">
       <div class="result-platform-badge" id="platform-badge">YouTube</div>
-      <div class="result-thumb-overlay">
+      <div class="result-overlay">
         <div class="result-dish-name" id="result-dish"></div>
         <div class="result-creator" id="result-creator"></div>
       </div>
     </div>
     <div class="result-body">
-      <div class="result-section-label">Video info</div>
+      <div class="result-section-label" id="items-label">Ingredients</div>
       <div class="caption-box" id="caption-box"></div>
-      <div class="result-section-label">Ingredients — <span style="color:var(--accent);font-size:10px;">auto-matched</span></div>
-      <div class="serving-row">
+      <div class="serving-row" id="serving-row">
         <div class="serving-label">Servings</div>
         <div class="serving-ctrl">
           <button class="serving-btn" onclick="changeServings(-1)">−</button>
@@ -256,7 +332,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
       <div class="ing-list" id="ing-list"></div>
       <div class="action-row">
         <button class="cart-btn" id="cart-btn" onclick="addToCart()">
-          <span>🛒</span><span id="cart-txt">Order now on Instamart</span>
+          <span id="cart-icon">🛒</span><span id="cart-txt">Order now</span>
         </button>
         <button class="save-btn" id="save-btn" onclick="saveToWishlist()">
           <span>🔖</span><span>Save</span>
@@ -270,52 +346,56 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 <div class="tab-content" id="tab-wishlist">
   <div class="wl-header">
     <div class="wl-title">Wishlist</div>
-    <div class="wl-sub">Save recipes to order later</div>
+    <div class="wl-sub">Saved items, smart-grouped for you</div>
   </div>
 
-  <div style="margin:0 20px 16px;">
+  <div style="margin:0 20px 14px;">
     <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;">
-      <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
-        <div style="font-size:16px;flex-shrink:0;">🔗</div>
+      <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;">
+        <div style="font-size:15px;flex-shrink:0;" id="wl-url-icon">🔗</div>
         <input id="wl-url-input" type="url" placeholder="Paste YouTube link to save..." style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;"/>
-        <button onclick="saveFromUrl()" id="wl-save-btn" style="background:var(--accent);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;">Save</button>
+        <button onclick="saveFromUrl()" id="wl-save-btn" style="background:var(--accent);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Save</button>
       </div>
     </div>
   </div>
 
   <div id="wl-empty" class="wl-empty">
     <div class="wl-empty-icon">🔖</div>
-    <div>No saved recipes yet</div>
-    <div style="font-size:11px;margin-top:4px;">Paste a link above or tap Save on any recipe</div>
+    <div>No saved items yet</div>
+    <div style="font-size:11px;margin-top:4px;">Paste a link above or tap Save on any reel</div>
   </div>
 
-  <div class="wl-items" id="wl-items"></div>
-
-  <div id="group-section" class="group-section" style="display:none;">
-    <div class="group-label">Smart grouping — order all at once</div>
-    <div id="group-cards"></div>
+  <div id="wl-content" style="display:none;">
+    <!-- SMART CATEGORIES — shown first, this is the star -->
+    <div class="cat-section" id="cat-section"></div>
+    <!-- Individual saved items below -->
+    <div style="padding:0 20px;margin-top:4px;">
+      <div style="font-size:11px;color:var(--muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;">All saved <span style="flex:1;height:0.5px;background:var(--border);display:block;"></span></div>
+    </div>
+    <div class="wl-saved-list" id="wl-items"></div>
   </div>
 </div>
 
-<!-- ORDER SUMMARY MODAL -->
+<!-- ORDER MODAL -->
 <div class="modal-overlay" id="order-modal" onclick="closeModalOnBg(event)">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">Order summary</div>
-    <div class="modal-sub" id="modal-sub">2 servings · Delivered in ~10 mins</div>
-    <div class="modal-platform">
-      <div style="font-size:16px;">🛒</div>
-      <div class="modal-platform-text">Will be ordered via Swiggy Instamart</div>
+    <div class="modal-title" id="modal-title">Order summary</div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div class="modal-platform" id="modal-platform">
+      <div style="font-size:16px;" id="modal-platform-icon">🛒</div>
+      <div class="modal-platform-text" id="modal-platform-text"></div>
     </div>
+    <div style="padding:0 20px;margin-bottom:8px;font-size:10px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;">Items — tap +/− to adjust quantity</div>
     <div class="modal-items" id="modal-items"></div>
     <div class="modal-divider"></div>
     <div class="modal-total-row"><div class="modal-total-label">Subtotal</div><div class="modal-total-val" id="modal-subtotal">₹0</div></div>
     <div class="modal-total-row"><div class="modal-total-label">Delivery fee</div><div class="modal-total-val">₹25</div></div>
     <div class="modal-total-row"><div class="modal-total-label">Platform fee</div><div class="modal-total-val">₹5</div></div>
-    <div class="modal-divider"></div>
+    <div class="modal-divider" style="margin-top:10px;"></div>
     <div class="modal-grand"><div class="modal-grand-label">Total</div><div class="modal-grand-val" id="modal-total">₹0</div></div>
     <div class="modal-actions">
-      <button class="modal-confirm-btn" onclick="confirmOrder()">Confirm & go to Instamart ↗</button>
+      <button class="modal-confirm-btn" id="modal-confirm-btn" onclick="confirmOrder()">Confirm & place order ↗</button>
       <button class="modal-cancel-btn" onclick="closeModal()">Cancel</button>
     </div>
   </div>
@@ -323,330 +403,497 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 
 <div class="bottom-nav">
   <div class="bnav-item active" id="bnav-scan" onclick="switchTab('scan')">
-    <div class="bnav-icon">🔍</div>
-    <div class="bnav-label">Scan reel</div>
+    <div class="bnav-icon">🔍</div><div class="bnav-label">Scan</div>
   </div>
   <div class="bnav-item" id="bnav-wishlist" onclick="switchTab('wishlist')">
-    <div class="bnav-icon">🔖</div>
-    <div class="bnav-label">Wishlist</div>
+    <div class="bnav-icon">🔖</div><div class="bnav-label">Wishlist</div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
+let currentMode = 'food';
 let currentIngredients = [];
 let currentServings = 2;
 let currentBaseServings = 2;
 let currentMeta = {};
 let wishlist = [];
+let modalItems = [];
+let modalIsBeauty = false;
 
+// ─── MODE ───
+function setMode(mode) {
+  currentMode = mode;
+  const isBeauty = mode === 'beauty';
+  document.getElementById('cat-food').className = 'cat-btn' + (isBeauty ? '' : ' active-food');
+  document.getElementById('cat-beauty').className = 'cat-btn' + (isBeauty ? ' active-beauty' : '');
+  document.getElementById('fetch-btn').className = 'url-fetch-btn ' + (isBeauty ? 'btn-beauty' : 'btn-food');
+  document.getElementById('fetch-btn').textContent = isBeauty ? 'Find products' : 'Extract';
+  document.getElementById('url-input').placeholder = isBeauty ? 'Paste makeup reel link...' : 'Paste YouTube food reel link...';
+  document.getElementById('food-thumbs').style.display = isBeauty ? 'none' : 'flex';
+  document.getElementById('beauty-thumbs').style.display = isBeauty ? 'flex' : 'none';
+  document.getElementById('thumb-label').textContent = isBeauty ? 'Trending makeup reels — tap to load' : 'Trending food reels — tap to load';
+  document.getElementById('result-panel').classList.remove('show');
+  document.getElementById('error-state').classList.remove('show');
+}
+
+// ─── YOUTUBE ID ───
 function extractYouTubeId(url) {
-  const patterns = [
-    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
-    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
-    /youtu\.be\/([a-zA-Z0-9_-]{11})/,
-  ];
-  for (const p of patterns) { const m = url.match(p); if (m) return m[1]; }
+  for (const p of [/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,/youtu\.be\/([a-zA-Z0-9_-]{11})/]) {
+    const m = url.match(p); if (m) return m[1];
+  }
   return null;
 }
 
-function setLoadingStep(steps, activeIdx) {
-  document.getElementById('loading-steps').innerHTML = steps.map((s,i) => {
-    let cls = 'loading-step' + (i < activeIdx ? ' done' : i === activeIdx ? ' active' : '');
-    const icon = i < activeIdx ? '✓' : (i === activeIdx ? '◉' : '○');
-    return `<div class="${cls}"><span>${icon}</span><span>${s}</span></div>`;
-  }).join('');
-}
+// ─── FETCH REEL ───
+async function fetchReel(url, forceMode, forceTitle) {
+  const inputUrl = url || document.getElementById('url-input').value.trim();
+  if (!inputUrl) { showToast('Paste a link first'); return; }
+  const mode = forceMode || currentMode;
+  const steps = mode === 'beauty'
+    ? ['Fetching reel info','Identifying products','Building shopping list']
+    : ['Fetching reel info','Reading title & thumbnail','Matching ingredients'];
 
-async function fetchReel() {
-  const url = document.getElementById('url-input').value.trim();
-  if (!url) { showToast('Paste a link first'); return; }
   document.getElementById('result-panel').classList.remove('show');
   document.getElementById('error-state').classList.remove('show');
   document.getElementById('loading-state').classList.add('show');
+  document.getElementById('loading-spinner').className = 'loading-spinner' + (mode==='beauty'?' beauty-spin':'');
   document.getElementById('fetch-btn').disabled = true;
-  const steps = ['Fetching reel info','Reading title & thumbnail','Matching ingredients'];
+
   try {
-    if (url.includes('instagram.com')) {
-      setLoadingStep(steps,0); await sleep(500); setLoadingStep(steps,1); await sleep(300);
-      document.getElementById('loading-state').classList.remove('show');
-      document.getElementById('error-state').classList.add('show');
-      document.getElementById('error-msg').textContent = 'Instagram blocks external access. Use a YouTube link for now.';
-      document.getElementById('fetch-btn').disabled = false;
-      return;
+    if (inputUrl.includes('instagram.com')) {
+      setLS(steps,0); await sleep(500);
+      throw new Error('Instagram blocks external access. Use a YouTube link.');
     }
-    const ytId = extractYouTubeId(url);
-    if (!ytId) throw new Error('Unrecognised link. Try a YouTube Short or youtube.com/watch link.');
+    const ytId = extractYouTubeId(inputUrl);
+    let title = forceTitle || 'Food Recipe';
+    let author = 'YouTube';
 
-    setLoadingStep(steps,0);
-    let title = 'Food Recipe', author = 'YouTube';
-    for (const proxy of [`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`,`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${ytId}&format=json`]) {
-      try { const r = await fetch(proxy); if (r.ok) { const d = await r.json(); title = d.title||title; author = d.author_name||author; break; } } catch(e) {}
+    if (ytId) {
+      setLS(steps,0);
+      for (const p of [`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`,`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${ytId}&format=json`]) {
+        try { const r=await fetch(p); if(r.ok){const d=await r.json();title=d.title||title;author=d.author_name||author;break;} } catch(e) {}
+      }
+    } else if (!forceTitle) {
+      throw new Error('Unrecognised link. Try a YouTube Short or watch link.');
     }
 
-    setLoadingStep(steps,1); await sleep(300);
-    const thumbUrl = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
+    setLS(steps,1); await sleep(350);
+    const thumbUrl = ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : '';
+    setLS(steps,2); await sleep(350);
 
-    setLoadingStep(steps,2); await sleep(400);
-    const ingredients = getIngredients(title);
-
+    const items = mode === 'beauty' ? getBeautyItems(forceTitle||title) : getFoodItems(title);
     document.getElementById('loading-state').classList.remove('show');
-    currentIngredients = ingredients;
+
+    currentIngredients = items;
     currentServings = 2; currentBaseServings = 2;
-    currentMeta = {title, author, thumbUrl, ytId};
-    document.getElementById('result-thumb').src = thumbUrl;
+    currentMode = mode;
+    currentMeta = {title, author, thumbUrl, ytId:ytId||('beauty_'+Date.now()), mode};
+
+    if (thumbUrl) {
+      document.getElementById('result-thumb').src = thumbUrl;
+      document.getElementById('result-thumb').style.display = 'block';
+    } else {
+      document.getElementById('result-thumb').style.display = 'none';
+    }
     document.getElementById('result-dish').textContent = title;
     document.getElementById('result-creator').textContent = author;
-    document.getElementById('platform-badge').textContent = url.includes('shorts') ? 'YouTube Shorts' : 'YouTube';
+    document.getElementById('platform-badge').textContent = inputUrl.includes('shorts') ? 'YouTube Shorts' : 'YouTube';
     document.getElementById('caption-box').textContent = '"' + title + '" by ' + author;
+    document.getElementById('items-label').textContent = mode==='beauty' ? 'Products needed' : 'Ingredients';
+    document.getElementById('serving-row').style.display = mode==='beauty' ? 'none' : 'flex';
+    document.getElementById('cart-icon').textContent = mode==='beauty' ? '💄' : '🛒';
+    document.getElementById('cart-txt').textContent = mode==='beauty' ? 'Shop on Nykaa / Instamart' : 'Order now on Instamart';
+    document.getElementById('cart-btn').style.background = mode==='beauty' ? 'var(--pink)' : 'var(--accent)';
     document.getElementById('cart-btn').classList.remove('success');
-    document.getElementById('cart-txt').textContent = 'Order now on Instamart';
     document.getElementById('save-btn').classList.remove('saved');
     document.getElementById('save-btn').innerHTML = '<span>🔖</span><span>Save</span>';
     renderIngredients();
     document.getElementById('result-panel').classList.add('show');
     document.getElementById('fetch-btn').disabled = false;
+    if (!url) document.getElementById('url-input').value = '';
   } catch(err) {
     document.getElementById('loading-state').classList.remove('show');
     document.getElementById('error-state').classList.add('show');
-    document.getElementById('error-msg').textContent = err.message || 'Something went wrong. Try again.';
+    document.getElementById('error-msg').textContent = err.message||'Something went wrong.';
     document.getElementById('fetch-btn').disabled = false;
   }
 }
 
-function getIngredients(title) {
-  const t = (title||'').toLowerCase();
-  if (t.includes('biryani')) return [
-    {name:'Chicken (curry cut)',qty:400,unit:'g'},{name:'Basmati rice',qty:200,unit:'g'},
-    {name:'Yogurt',qty:150,unit:'g'},{name:'Onion',qty:2,unit:'pcs'},
-    {name:'Biryani masala',qty:2,unit:'tbsp'},{name:'Ginger garlic paste',qty:1,unit:'tbsp'},
-    {name:'Ghee',qty:2,unit:'tbsp'},{name:'Mint leaves',qty:10,unit:'g'},
-    {name:'Saffron',qty:1,unit:'pinch'},{name:'Fried onions',qty:30,unit:'g'}
-  ];
-  if (t.includes('shakshuka')) return [
-    {name:'Eggs',qty:4,unit:'pcs'},{name:'Crushed tomatoes',qty:400,unit:'g'},
-    {name:'Onion',qty:1,unit:'pcs'},{name:'Red bell pepper',qty:1,unit:'pcs'},
-    {name:'Olive oil',qty:2,unit:'tbsp'},{name:'Garlic',qty:2,unit:'pcs'},
-    {name:'Cumin',qty:1,unit:'tsp'},{name:'Paprika',qty:1,unit:'tsp'},
-    {name:'Feta cheese',qty:50,unit:'g'}
-  ];
-  if (t.includes('pasta')||t.includes('pesto')) return [
-    {name:'Pasta (penne)',qty:200,unit:'g'},{name:'Fresh basil',qty:20,unit:'g'},
-    {name:'Parmesan',qty:60,unit:'g'},{name:'Pine nuts',qty:30,unit:'g'},
-    {name:'Garlic',qty:2,unit:'pcs'},{name:'Olive oil',qty:4,unit:'tbsp'},
-    {name:'Cherry tomatoes',qty:100,unit:'g'}
-  ];
-  if (t.includes('pancake')) return [
-    {name:'All-purpose flour',qty:150,unit:'g'},{name:'Eggs',qty:2,unit:'pcs'},
-    {name:'Milk',qty:200,unit:'ml'},{name:'Butter',qty:30,unit:'g'},
-    {name:'Baking powder',qty:1,unit:'tsp'},{name:'Sugar',qty:1,unit:'tbsp'}
-  ];
-  if (t.includes('dal')||t.includes('lentil')) return [
-    {name:'Red lentils',qty:150,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},
-    {name:'Tomato',qty:2,unit:'pcs'},{name:'Garlic',qty:3,unit:'pcs'},
-    {name:'Cumin seeds',qty:1,unit:'tsp'},{name:'Turmeric',qty:0.5,unit:'tsp'},{name:'Ghee',qty:1,unit:'tbsp'}
-  ];
-  if (t.includes('noodle')||t.includes('fried rice')) return [
-    {name:'Noodles',qty:200,unit:'g'},{name:'Eggs',qty:2,unit:'pcs'},
-    {name:'Spring onion',qty:2,unit:'pcs'},{name:'Soy sauce',qty:2,unit:'tbsp'},
-    {name:'Garlic',qty:2,unit:'pcs'},{name:'Sesame oil',qty:1,unit:'tbsp'},{name:'Mixed veg',qty:100,unit:'g'}
-  ];
-  if (t.includes('egg')||t.includes('omelette')) return [
-    {name:'Eggs',qty:3,unit:'pcs'},{name:'Onion',qty:1,unit:'pcs'},
-    {name:'Tomato',qty:1,unit:'pcs'},{name:'Green chilli',qty:1,unit:'pcs'},
-    {name:'Butter',qty:1,unit:'tbsp'},{name:'Salt + pepper',qty:1,unit:'to taste'}
-  ];
-  return [
-    {name:'Main protein',qty:300,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},
-    {name:'Garlic',qty:3,unit:'pcs'},{name:'Tomatoes',qty:2,unit:'pcs'},
-    {name:'Oil',qty:2,unit:'tbsp'},{name:'Salt + spices',qty:1,unit:'to taste'}
-  ];
+function setLS(steps, idx) {
+  document.getElementById('loading-steps').innerHTML = steps.map((s,i)=>{
+    const cls='loading-step'+(i<idx?' done':i===idx?' active':'');
+    return `<div class="${cls}"><span>${i<idx?'✓':i===idx?'◉':'○'}</span><span>${s}</span></div>`;
+  }).join('');
 }
 
+// ─── FOOD ITEMS ───
+function getFoodItems(title) {
+  const t=(title||'').toLowerCase();
+  if(t.includes('biryani')) return [{name:'Chicken (curry cut)',qty:400,unit:'g'},{name:'Basmati rice',qty:200,unit:'g'},{name:'Yogurt',qty:150,unit:'g'},{name:'Onion',qty:2,unit:'pcs'},{name:'Biryani masala',qty:2,unit:'tbsp'},{name:'Ginger garlic paste',qty:1,unit:'tbsp'},{name:'Ghee',qty:2,unit:'tbsp'},{name:'Mint leaves',qty:10,unit:'g'},{name:'Saffron',qty:1,unit:'pinch'},{name:'Fried onions',qty:30,unit:'g'}];
+  if(t.includes('shakshuka')) return [{name:'Eggs',qty:4,unit:'pcs'},{name:'Crushed tomatoes',qty:400,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},{name:'Red bell pepper',qty:1,unit:'pcs'},{name:'Olive oil',qty:2,unit:'tbsp'},{name:'Garlic',qty:2,unit:'pcs'},{name:'Cumin',qty:1,unit:'tsp'},{name:'Paprika',qty:1,unit:'tsp'},{name:'Feta cheese',qty:50,unit:'g'}];
+  if(t.includes('pasta')||t.includes('pesto')) return [{name:'Pasta (penne)',qty:200,unit:'g'},{name:'Fresh basil',qty:20,unit:'g'},{name:'Parmesan',qty:60,unit:'g'},{name:'Pine nuts',qty:30,unit:'g'},{name:'Garlic',qty:2,unit:'pcs'},{name:'Olive oil',qty:4,unit:'tbsp'},{name:'Cherry tomatoes',qty:100,unit:'g'}];
+  if(t.includes('pancake')) return [{name:'All-purpose flour',qty:150,unit:'g'},{name:'Eggs',qty:2,unit:'pcs'},{name:'Milk',qty:200,unit:'ml'},{name:'Butter',qty:30,unit:'g'},{name:'Baking powder',qty:1,unit:'tsp'},{name:'Sugar',qty:1,unit:'tbsp'}];
+  if(t.includes('dal')||t.includes('lentil')) return [{name:'Red lentils',qty:150,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},{name:'Tomato',qty:2,unit:'pcs'},{name:'Garlic',qty:3,unit:'pcs'},{name:'Cumin seeds',qty:1,unit:'tsp'},{name:'Turmeric',qty:0.5,unit:'tsp'},{name:'Ghee',qty:1,unit:'tbsp'}];
+  if(t.includes('egg')||t.includes('omelette')) return [{name:'Eggs',qty:3,unit:'pcs'},{name:'Onion',qty:1,unit:'pcs'},{name:'Tomato',qty:1,unit:'pcs'},{name:'Butter',qty:1,unit:'tbsp'},{name:'Salt + pepper',qty:1,unit:'to taste'}];
+  return [{name:'Main protein',qty:300,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},{name:'Garlic',qty:3,unit:'pcs'},{name:'Tomatoes',qty:2,unit:'pcs'},{name:'Oil',qty:2,unit:'tbsp'},{name:'Salt + spices',qty:1,unit:'to taste'}];
+}
+
+// ─── BEAUTY ITEMS ───
+function getBeautyItems(title) {
+  const t=(title||'').toLowerCase();
+  if(t.includes('smoky')||t.includes('eye')) return [{name:'Eye shadow palette (neutrals)',qty:1,unit:'pcs'},{name:'Black kohl/kajal',qty:1,unit:'pcs'},{name:'Eyeshadow primer',qty:1,unit:'pcs'},{name:'Mascara (volumising)',qty:1,unit:'pcs'},{name:'Blending brush set',qty:1,unit:'pcs'},{name:'Setting spray',qty:1,unit:'pcs'}];
+  if(t.includes('dewy')||t.includes('skin')||t.includes('glow')) return [{name:'Vitamin C serum',qty:1,unit:'pcs'},{name:'Moisturiser (SPF 30)',qty:1,unit:'pcs'},{name:'Hydrating toner',qty:1,unit:'pcs'},{name:'Sheet mask',qty:2,unit:'pcs'},{name:'Face mist',qty:1,unit:'pcs'},{name:'Lip balm (tinted)',qty:1,unit:'pcs'}];
+  if(t.includes('no makeup')||t.includes('natural')||t.includes('minimal')) return [{name:'BB cream / tinted moisturiser',qty:1,unit:'pcs'},{name:'Concealer (skin tone)',qty:1,unit:'pcs'},{name:'Brow gel (clear)',qty:1,unit:'pcs'},{name:'Blush (peach/coral)',qty:1,unit:'pcs'},{name:'Gloss (nude)',qty:1,unit:'pcs'},{name:'Setting powder',qty:1,unit:'pcs'}];
+  if(t.includes('everyday')||t.includes('glam')||t.includes('makeup')) return [{name:'Foundation (matching shade)',qty:1,unit:'pcs'},{name:'Concealer',qty:1,unit:'pcs'},{name:'Compact powder',qty:1,unit:'pcs'},{name:'Blush + bronzer duo',qty:1,unit:'pcs'},{name:'Eyeliner (felt tip)',qty:1,unit:'pcs'},{name:'Nude lipstick',qty:1,unit:'pcs'},{name:'Makeup brushes set',qty:1,unit:'pcs'}];
+  return [{name:'Foundation',qty:1,unit:'pcs'},{name:'Concealer',qty:1,unit:'pcs'},{name:'Mascara',qty:1,unit:'pcs'},{name:'Lip colour',qty:1,unit:'pcs'},{name:'Blush',qty:1,unit:'pcs'},{name:'Setting spray',qty:1,unit:'pcs'}];
+}
+
+// ─── RENDER INGREDIENTS ───
 function formatQty(qty, unit, servings) {
-  if (!qty || unit === 'pinch' || unit === 'to taste') return unit;
-  const scaled = (qty / currentBaseServings) * servings;
-  const countUnits = ['pcs','piece','pieces','clove','cloves','medium','large','small'];
-  if (countUnits.includes(unit.toLowerCase())) return Math.max(1,Math.round(scaled)) + ' ' + unit;
-  if (scaled >= 10) return Math.round(scaled) + ' ' + unit;
-  const r = Math.round(scaled*2)/2;
-  return (r%1===0?r:r.toFixed(1)) + ' ' + unit;
+  if(!qty||unit==='pinch'||unit==='to taste'||unit==='pcs') return unit==='pcs'?(Math.max(1,Math.round((qty/currentBaseServings)*servings))+' pcs'):(unit);
+  const scaled=(qty/currentBaseServings)*servings;
+  if(scaled>=10) return Math.round(scaled)+' '+unit;
+  const r=Math.round(scaled*2)/2;
+  return (r%1===0?r:r.toFixed(1))+' '+unit;
 }
 
 function renderIngredients() {
   document.getElementById('serving-val').textContent = currentServings;
-  document.getElementById('ing-list').innerHTML = currentIngredients.map((ing,i) => `
+  const isBeauty = currentMeta.mode === 'beauty';
+  document.getElementById('ing-list').innerHTML = currentIngredients.map((ing,i)=>`
     <div class="ing-row">
       <div class="ing-left">
-        <div class="ing-check" id="chk-${i}" onclick="toggleCheck(${i})"></div>
+        <div class="ing-check ${isBeauty?'beauty-check':''}" id="chk-${i}" onclick="toggleCheck(${i})"></div>
         <div>${ing.name}</div>
       </div>
-      <div class="ing-qty">${formatQty(ing.qty,ing.unit,currentServings)}</div>
+      <div class="ing-qty">${isBeauty?(ing.qty+' '+ing.unit):formatQty(ing.qty,ing.unit,currentServings)}</div>
     </div>`).join('');
 }
 
-function changeServings(d) { currentServings = Math.max(1,Math.min(8,currentServings+d)); renderIngredients(); }
-
-function toggleCheck(i) {
-  const el = document.getElementById('chk-'+i);
+function changeServings(d){currentServings=Math.max(1,Math.min(8,currentServings+d));renderIngredients();}
+function toggleCheck(i){
+  const el=document.getElementById('chk-'+i);
   el.classList.toggle('checked');
-  el.innerHTML = el.classList.contains('checked') ? '<svg width="9" height="9" viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>' : '';
+  el.innerHTML=el.classList.contains('checked')?'<svg width="9" height="9" viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>':'';
 }
 
-// Ingredient price estimation
-const PRICES = {
-  'g': n => n.includes('chicken')||n.includes('meat')||n.includes('fish') ? 0.28 : n.includes('rice')||n.includes('basmati') ? 0.12 : n.includes('yogurt') ? 0.08 : n.includes('cheese')||n.includes('feta')||n.includes('parmesan') ? 0.6 : n.includes('flour') ? 0.06 : 0.15,
-  'pcs': n => n.includes('egg') ? 8 : n.includes('onion') ? 12 : n.includes('tomato') ? 10 : n.includes('pepper')||n.includes('capsicum') ? 20 : n.includes('garlic') ? 3 : n.includes('lemon') ? 8 : 15,
-  'tbsp': () => 4, 'tsp': () => 2, 'ml': () => 0.08,
-  'pinch': () => 2, 'to taste': () => 3,
-};
-function estimatePrice(ing) {
-  const name = ing.name.toLowerCase();
-  const unit = (ing.unit||'').toLowerCase();
-  const fn = PRICES[unit] || (() => 20);
-  return Math.max(5, Math.round(ing.qty * (typeof fn==='function' ? fn(name) : fn)));
+// ─── PRICING ───
+const FOOD_PRICES={'g':n=>n.includes('chicken')||n.includes('meat')?0.28:n.includes('rice')||n.includes('basmati')?0.12:n.includes('yogurt')?0.08:n.includes('cheese')||n.includes('feta')||n.includes('parmesan')?0.6:n.includes('flour')?0.06:0.15,'pcs':n=>n.includes('egg')?8:n.includes('onion')?12:n.includes('tomato')?10:n.includes('pepper')?20:n.includes('garlic')?3:n.includes('lemon')?8:15,'tbsp':()=>4,'tsp':()=>2,'ml':()=>0.08,'pinch':()=>2,'to taste':()=>3};
+const BEAUTY_PRICES={foundation:899,concealer:599,mascara:499,eyeliner:299,blush:649,bronzer:749,lipstick:449,gloss:399,setting:399,primer:549,palette:1299,serum:799,moisturiser:699,toner:499,mask:149,mist:349,balm:199,brow:349,powder:449,brush:899,compact:599};
+function estimatePrice(ing, isBeauty) {
+  if(isBeauty){const n=ing.name.toLowerCase();for(const[k,v]of Object.entries(BEAUTY_PRICES)){if(n.includes(k))return v;}return 499;}
+  const n=ing.name.toLowerCase();const u=(ing.unit||'').toLowerCase();const fn=FOOD_PRICES[u]||(()=>20);return Math.max(5,Math.round(ing.qty*(typeof fn==='function'?fn(n):fn)));
 }
 
-function addToCart() {
-  const scaled = currentIngredients.map(ing => ({
+// ─── CART / MODAL ───
+function addToCart(overrideItems, overrideMode) {
+  const items = overrideItems || currentIngredients;
+  const isBeauty = (overrideMode || currentMeta.mode) === 'beauty';
+  modalIsBeauty = isBeauty;
+
+  modalItems = items.map(ing => ({
     ...ing,
-    scaledQty: (ing.qty/currentBaseServings)*currentServings,
-    price: estimatePrice({...ing, qty:(ing.qty/currentBaseServings)*currentServings})
+    scaledQty: isBeauty ? ing.qty : Math.round((ing.qty/currentBaseServings)*currentServings*10)/10,
+    price: estimatePrice(isBeauty?ing:{...ing,qty:(ing.qty/currentBaseServings)*currentServings}, isBeauty),
+    modalQty: 1
   }));
-  const subtotal = scaled.reduce((s,i) => s+i.price, 0);
-  const total = subtotal + 30;
 
-  document.getElementById('modal-sub').textContent = currentServings + ' serving' + (currentServings>1?'s':'') + ' · ' + currentIngredients.length + ' items · Delivered in ~10 mins';
-  document.getElementById('modal-subtotal').textContent = '₹' + subtotal;
-  document.getElementById('modal-total').textContent = '₹' + total;
-
-  const countU = ['pcs','piece','pieces','clove','cloves','medium','large','small'];
-  document.getElementById('modal-items').innerHTML = scaled.map(ing => {
-    const isCount = countU.includes((ing.unit||'').toLowerCase());
-    const q = isCount ? Math.max(1,Math.round(ing.scaledQty)) : ing.scaledQty>=10 ? Math.round(ing.scaledQty) : Math.round(ing.scaledQty*2)/2;
-    const qStr = (ing.unit==='pinch'||ing.unit==='to taste') ? ing.unit : q+' '+ing.unit;
-    return `<div class="modal-item"><div class="modal-item-name">${ing.name}</div><div class="modal-item-right"><div class="modal-item-qty">${qStr}</div><div class="modal-item-price">₹${ing.price}</div></div></div>`;
-  }).join('');
-
+  updateModal();
+  document.getElementById('modal-platform').className = 'modal-platform ' + (isBeauty?'modal-platform-beauty':'modal-platform-food');
+  document.getElementById('modal-platform-icon').textContent = isBeauty ? '💄' : '🛒';
+  document.getElementById('modal-platform-text').textContent = isBeauty ? 'Will be ordered via Nykaa / Instamart Beauty' : 'Will be ordered via Swiggy Instamart';
+  document.getElementById('modal-platform-text').className = 'modal-platform-text ' + (isBeauty?'beauty-txt':'food-txt');
+  document.getElementById('modal-confirm-btn').style.background = isBeauty ? 'var(--pink)' : 'var(--accent)';
+  document.getElementById('modal-grand-val').style.color = isBeauty ? 'var(--pink)' : 'var(--accent)';
   document.getElementById('order-modal').classList.add('show');
 }
 
-function closeModal() { document.getElementById('order-modal').classList.remove('show'); }
-function closeModalOnBg(e) { if(e.target===document.getElementById('order-modal')) closeModal(); }
-
-function confirmOrder() {
-  closeModal();
-  document.getElementById('cart-btn').classList.add('success');
-  document.getElementById('cart-txt').textContent = 'Opening Instamart... ↗';
-  showToast('Redirecting to Instamart!');
-  setTimeout(() => window.open('https://www.swiggy.com/instamart','_blank'), 600);
+function updateModal() {
+  const subtotal = modalItems.reduce((s,i)=>s+(i.price*i.modalQty),0);
+  const total = subtotal + 30;
+  document.getElementById('modal-sub').textContent = modalItems.length + ' items · Delivered in ~10 mins';
+  document.getElementById('modal-subtotal').textContent = '₹' + subtotal;
+  document.getElementById('modal-total').textContent = '₹' + total;
+  const countU=['pcs','piece','pieces'];
+  document.getElementById('modal-items').innerHTML = modalItems.map((ing,i)=>{
+    const isCount=countU.includes((ing.unit||'').toLowerCase())||modalIsBeauty;
+    const qStr=isCount?(ing.modalQty+' pcs'):((ing.unit==='pinch'||ing.unit==='to taste')?ing.unit:ing.scaledQty+' '+ing.unit);
+    return `<div class="modal-item">
+      <div class="modal-item-name">${ing.name}</div>
+      <div class="modal-item-controls">
+        <button class="modal-qty-btn" onclick="changeModalQty(${i},-1)">−</button>
+        <div class="modal-qty-val">${isCount?ing.modalQty:qStr}</div>
+        <button class="modal-qty-btn" onclick="changeModalQty(${i},1)">+</button>
+      </div>
+      <div class="modal-item-price">₹${ing.price*ing.modalQty}</div>
+    </div>`;
+  }).join('');
 }
 
-function saveToWishlist() {
-  if (!currentMeta.ytId) return;
-  if (wishlist.find(w=>w.ytId===currentMeta.ytId)) { showToast('Already in wishlist!'); return; }
-  wishlist.push({...currentMeta, ingredients:currentIngredients, servings:currentServings});
+function changeModalQty(i, d) {
+  modalItems[i].modalQty = Math.max(0, (modalItems[i].modalQty||1)+d);
+  if(modalItems[i].modalQty===0) { modalItems.splice(i,1); }
+  updateModal();
+}
+
+function closeModal(){document.getElementById('order-modal').classList.remove('show');}
+function closeModalOnBg(e){if(e.target===document.getElementById('order-modal'))closeModal();}
+function confirmOrder(){
+  closeModal();
+  document.getElementById('cart-btn').classList.add('success');
+  document.getElementById('cart-txt').textContent = 'Opening... ↗';
+  showToast('Redirecting to place order!');
+  setTimeout(()=>window.open(modalIsBeauty?'https://www.nykaa.com':'https://www.swiggy.com/instamart','_blank'),600);
+}
+
+// ─── SAVE ───
+function saveToWishlist(){
+  if(!currentMeta.ytId){return;}
+  if(wishlist.find(w=>w.ytId===currentMeta.ytId)){showToast('Already saved!');return;}
+  wishlist.push({...currentMeta,ingredients:currentIngredients,servings:currentServings});
   document.getElementById('save-btn').classList.add('saved');
-  document.getElementById('save-btn').innerHTML = '<span>✓</span><span>Saved</span>';
+  document.getElementById('save-btn').innerHTML='<span>✓</span><span>Saved</span>';
   showToast('Saved to Wishlist!');
   renderWishlist();
 }
 
-async function saveFromUrl() {
-  const url = document.getElementById('wl-url-input').value.trim();
-  if (!url) { showToast('Paste a YouTube link first'); return; }
-  const ytId = extractYouTubeId(url);
-  if (!ytId) { showToast('Only YouTube links supported'); return; }
-  if (wishlist.find(w=>w.ytId===ytId)) { showToast('Already in wishlist!'); return; }
-  const btn = document.getElementById('wl-save-btn');
-  btn.textContent = '...'; btn.disabled = true;
-  try {
-    let title = 'Food Recipe', author = 'YouTube';
-    for (const proxy of [`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`,`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${ytId}&format=json`]) {
-      try { const r = await fetch(proxy); if(r.ok){const d=await r.json();title=d.title||title;author=d.author_name||author;break;} } catch(e) {}
+async function saveFromUrl(){
+  const url=document.getElementById('wl-url-input').value.trim();
+  if(!url){showToast('Paste a link first');return;}
+  const ytId=extractYouTubeId(url);
+  if(!ytId){showToast('Only YouTube links for now');return;}
+  if(wishlist.find(w=>w.ytId===ytId)){showToast('Already saved!');return;}
+  const btn=document.getElementById('wl-save-btn');
+  btn.textContent='...';btn.disabled=true;
+  try{
+    let title='Food Recipe',author='YouTube';
+    for(const p of[`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`,`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${ytId}&format=json`]){
+      try{const r=await fetch(p);if(r.ok){const d=await r.json();title=d.title||title;author=d.author_name||author;break;}}catch(e){}
     }
-    const thumbUrl = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
-    wishlist.push({title, author, thumbUrl, ytId, ingredients:getIngredients(title), servings:2});
-    document.getElementById('wl-url-input').value = '';
-    renderWishlist();
-    showToast('Saved to Wishlist!');
-  } catch(e) { showToast('Could not fetch — check the link'); }
-  btn.textContent = 'Save'; btn.disabled = false;
+    const thumbUrl=`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
+    wishlist.push({title,author,thumbUrl,ytId,mode:currentMode,ingredients:getFoodItems(title),servings:2});
+    document.getElementById('wl-url-input').value='';
+    renderWishlist();showToast('Saved!');
+  }catch(e){showToast('Could not fetch link');}
+  btn.textContent='Save';btn.disabled=false;
 }
 
-function renderWishlist() {
-  const empty = document.getElementById('wl-empty');
-  const items = document.getElementById('wl-items');
-  const grp = document.getElementById('group-section');
-  if (wishlist.length===0) { empty.style.display='block'; items.innerHTML=''; grp.style.display='none'; return; }
-  empty.style.display='none';
-  items.innerHTML = wishlist.map((w,i) => `
+// ─── RENDER WISHLIST ───
+function renderWishlist(){
+  const hasItems = wishlist.length>0;
+  document.getElementById('wl-empty').style.display = hasItems?'none':'block';
+  document.getElementById('wl-content').style.display = hasItems?'block':'none';
+  if(!hasItems)return;
+
+  // Individual cards
+  document.getElementById('wl-items').innerHTML = wishlist.map((w,i)=>`
     <div class="wl-card">
       <div class="wl-card-head">
-        <img class="wl-thumb" src="${w.thumbUrl}" alt="">
+        ${w.thumbUrl?`<img class="wl-thumb" src="${w.thumbUrl}" alt="">`:`<div class="wl-thumb" style="background:${w.mode==='beauty'?'linear-gradient(135deg,#3d1030,#8B2252)':'linear-gradient(135deg,#2a1a0e,#5a3010)'};display:flex;align-items:center;justify-content:center;font-size:22px;">${w.mode==='beauty'?'💄':'🍳'}</div>`}
         <div class="wl-card-info">
           <div class="wl-card-title">${w.title}</div>
-          <div class="wl-card-meta">${w.author} · ${w.ingredients.length} ingredients</div>
+          <div class="wl-card-meta">${w.author} · ${w.ingredients.length} items</div>
+          <div class="wl-card-type ${w.mode==='beauty'?'type-beauty':'type-food'}">${w.mode==='beauty'?'💄 Beauty':'🍳 Food'}</div>
         </div>
       </div>
       <div class="wl-card-actions">
-        <button class="wl-order-btn" onclick="orderWishlist(${i})">🛒 Order ingredients</button>
+        <button class="wl-order-btn ${w.mode==='beauty'?'beauty-btn':'food-btn'}" onclick="orderWishlist(${i})">${w.mode==='beauty'?'💄':'🛒'} Order items</button>
         <button class="wl-remove-btn" onclick="removeWishlist(${i})">Remove</button>
       </div>
     </div>`).join('');
-  if (wishlist.length>=2) { grp.style.display='block'; renderSmartGroups(); } else { grp.style.display='none'; }
+
+  // Smart categories
+  renderSmartCategories();
 }
 
-function renderSmartGroups() {
-  const all = wishlist.flatMap(w=>w.ingredients.map(i=>i.name.toLowerCase()));
-  const unique = [...new Set(all)].length;
-  const saved = all.length - unique;
-  document.getElementById('group-cards').innerHTML = `
-    <div class="group-card">
-      <div class="group-head">
-        <div class="group-left"><div class="group-emoji">🧠</div>
-          <div><div class="group-name">All ${wishlist.length} recipes combined</div>
-          <div class="group-sub">${unique} unique ingredients · ${saved} duplicates removed</div></div>
+function renderSmartCategories(){
+  const foodItems = wishlist.filter(w=>w.mode!=='beauty');
+  const beautyItems = wishlist.filter(w=>w.mode==='beauty');
+  let html = '';
+
+  if(foodItems.length>=2){
+    const groups = groupByIngredientType(foodItems);
+    for(const [groupName, group] of Object.entries(groups)){
+      if(group.recipes.length<2)continue;
+      html += renderCatCard(groupName, group, 'food');
+    }
+  }
+  if(beautyItems.length>=2){
+    const groups = groupBeautyItems(beautyItems);
+    for(const [groupName, group] of Object.entries(groups)){
+      if(group.recipes.length<2)continue;
+      html += renderCatCard(groupName, group, 'beauty');
+    }
+  }
+
+  // Full combined order if 3+ saved
+  if(wishlist.length>=3){
+    const allIng = wishlist.flatMap(w=>w.ingredients);
+    const unique = [...new Set(allIng.map(i=>i.name))].length;
+    const saved = allIng.length - unique;
+    const totalVal = allIng.reduce((s,i)=>s+estimatePrice(i,false),0);
+    html += `<div class="cat-card food-cat" style="border-color:rgba(46,204,113,0.25);background:linear-gradient(135deg,rgba(46,204,113,0.06) 0%,var(--surface) 100%);">
+      <div class="cat-card-head">
+        <div class="cat-left"><div class="cat-icon-wrap" style="background:var(--green-bg);font-size:20px;">🧠</div>
+          <div><div class="cat-name">All ${wishlist.length} items combined</div>
+          <div class="cat-sub">${unique} unique items · ${saved} duplicates removed</div></div>
         </div>
-        <div class="group-badge">Save ${saved} items</div>
+        <div class="cat-save-badge" style="background:var(--green-bg);color:var(--green);">Save ${saved} items</div>
       </div>
-      <button class="group-order-btn" onclick="orderAllWishlist()">🛒 Order all — deduplicated cart</button>
+      <div class="cat-order-row">
+        <button class="cat-order-btn" style="background:var(--green-bg);border-color:rgba(46,204,113,0.3);color:var(--green);" onclick="orderAll()">🛒 Order everything — ₹${totalVal}</button>
+      </div>
     </div>`;
+  }
+
+  const sec = document.getElementById('cat-section');
+  if(html){
+    sec.style.display='block';
+    sec.innerHTML = `<div class="cat-section-title">Smart grouping ✦ order smarter</div>${html}`;
+  } else {
+    sec.style.display='none';
+  }
 }
 
-function orderAllWishlist() {
-  const combined = wishlist.flatMap(w=>w.ingredients);
-  currentIngredients = combined; currentServings = 2; currentBaseServings = 2;
-  currentMeta = {title:'All wishlist recipes', author:'', thumbUrl:''};
-  addToCart();
+function groupByIngredientType(recipes){
+  const groups={};
+  const typeMap={
+    'Egg dishes':['egg','eggs','omelette','shakshuka','frittata'],
+    'Rice & grains':['rice','biryani','pulao','fried rice','basmati'],
+    'Pasta & noodles':['pasta','noodle','spaghetti','penne','pesto'],
+    'Chicken dishes':['chicken','poultry'],
+    'Breakfast':['pancake','waffle','toast','banana']
+  };
+  for(const recipe of recipes){
+    const t=(recipe.title||'').toLowerCase();
+    let matched=false;
+    for(const[group,keywords]of Object.entries(typeMap)){
+      if(keywords.some(k=>t.includes(k))){
+        if(!groups[group])groups[group]={recipes:[],allIngredients:[]};
+        groups[group].recipes.push(recipe);
+        groups[group].allIngredients.push(...recipe.ingredients);
+        matched=true;break;
+      }
+    }
+    if(!matched){
+      if(!groups['Other'])groups['Other']={recipes:[],allIngredients:[]};
+      groups['Other'].recipes.push(recipe);
+      groups['Other'].allIngredients.push(...recipe.ingredients);
+    }
+  }
+  return groups;
 }
 
-function orderWishlist(i) {
-  const w = wishlist[i];
-  currentIngredients = w.ingredients; currentServings = w.servings||2; currentBaseServings = 2;
-  currentMeta = w;
-  addToCart();
+function groupBeautyItems(recipes){
+  const groups={};
+  const typeMap={
+    'Eye makeup':['smoky','eye','liner','mascara','shadow'],
+    'Skin & base':['dewy','skin','glow','foundation','serum','moistur'],
+    'Natural looks':['natural','no makeup','minimal','everyday'],
+    'Glam looks':['glam','bold','dramatic','night out']
+  };
+  for(const recipe of recipes){
+    const t=(recipe.title||'').toLowerCase();
+    let matched=false;
+    for(const[group,keywords]of Object.entries(typeMap)){
+      if(keywords.some(k=>t.includes(k))){
+        if(!groups[group])groups[group]={recipes:[],allIngredients:[]};
+        groups[group].recipes.push(recipe);
+        groups[group].allIngredients.push(...recipe.ingredients);
+        matched=true;break;
+      }
+    }
+    if(!matched){
+      if(!groups['Makeup essentials'])groups['Makeup essentials']={recipes:[],allIngredients:[]};
+      groups['Makeup essentials'].recipes.push(recipe);
+      groups['Makeup essentials'].allIngredients.push(...recipe.ingredients);
+    }
+  }
+  return groups;
 }
 
-function removeWishlist(i) { wishlist.splice(i,1); renderWishlist(); showToast('Removed'); }
+function renderCatCard(groupName, group, type){
+  const isBeauty=type==='beauty';
+  const allIng=group.allIngredients;
+  const nameCount={};
+  allIng.forEach(i=>{nameCount[i.name]=(nameCount[i.name]||0)+1;});
+  const unique=[...new Set(allIng.map(i=>i.name))];
+  const shared=Object.entries(nameCount).filter(([,c])=>c>1).map(([n])=>n);
+  const saved=allIng.length-unique.length;
+  const totalVal=unique.reduce((s,n)=>{const ing=allIng.find(i=>i.name===n);return s+(ing?estimatePrice(ing,isBeauty):0);},0);
+  const emoji=isBeauty?'💄':'🍳';
+  const icons={'Egg dishes':'🥚','Rice & grains':'🍚','Pasta & noodles':'🍝','Chicken dishes':'🍗','Breakfast':'🥞','Eye makeup':'👁️','Skin & base':'✨','Natural looks':'🌸','Glam looks':'💫','Makeup essentials':'💄','Other':'🍽️'};
+  const icon=icons[groupName]||emoji;
 
-function fillAndFetch(url) { document.getElementById('url-input').value=url; fetchReel(); }
+  return `<div class="cat-card ${isBeauty?'beauty-cat':'food-cat'}">
+    <div class="cat-card-head">
+      <div class="cat-left">
+        <div class="cat-icon-wrap ${isBeauty?'beauty-icon':'food-icon'}">${icon}</div>
+        <div>
+          <div class="cat-name">${groupName}</div>
+          <div class="cat-sub">${unique.length} unique items · ${group.recipes.length} recipes</div>
+        </div>
+      </div>
+      ${saved>0?`<div class="cat-save-badge ${isBeauty?'beauty-badge':'food-badge'}">${saved} duplicates saved</div>`:''}
+    </div>
+    <div class="cat-recipes">${group.recipes.map(r=>`
+      <div class="cat-recipe-row">
+        <div class="cat-recipe-name">${r.title}</div>
+        <div class="cat-recipe-count">${r.ingredients.length} items</div>
+      </div>`).join('')}
+    </div>
+    <div class="cat-shared-items">
+      ${shared.slice(0,4).map(n=>`<span class="cat-item-pill shared">✓ ${n}</span>`).join('')}
+      ${unique.filter(n=>!shared.includes(n)).slice(0,3).map(n=>`<span class="cat-item-pill">${n}</span>`).join('')}
+      ${unique.length>7?`<span class="cat-item-pill more ${isBeauty?'more-beauty':'more-food'}">+${unique.length-7} more</span>`:''}
+    </div>
+    <div class="cat-order-row">
+      <button class="cat-order-btn ${isBeauty?'beauty-order':'food-order'}" onclick="orderGroup(${JSON.stringify(unique).replace(/"/g,"'")}, '${type}', '${groupName}')">
+        ${isBeauty?'💄':'🛒'} Order all ${unique.length} items
+      </button>
+    </div>
+    <div class="cat-total">Est. ₹${totalVal} total · deduplicated</div>
+  </div>`;
+}
 
-function switchTab(tab) {
+function orderGroup(uniqueNames, type, groupName){
+  const allIng = wishlist.filter(w=>w.mode===type||(type==='food'&&w.mode!=='beauty')).flatMap(w=>w.ingredients);
+  const deduped = uniqueNames.map(n=>allIng.find(i=>i.name===n)).filter(Boolean);
+  addToCart(deduped, type);
+}
+
+function orderAll(){
+  const all=wishlist.flatMap(w=>w.ingredients);
+  const seen=new Set();
+  const deduped=all.filter(i=>{if(seen.has(i.name))return false;seen.add(i.name);return true;});
+  addToCart(deduped,'food');
+}
+
+function orderWishlist(i){
+  const w=wishlist[i];
+  currentIngredients=w.ingredients;currentServings=w.servings||2;currentBaseServings=2;currentMeta=w;
+  addToCart(w.ingredients,w.mode);
+}
+function removeWishlist(i){wishlist.splice(i,1);renderWishlist();showToast('Removed');}
+
+function fillAndFetch(url, mode, title){
+  if(mode){setMode(mode);}
+  document.getElementById('url-input').value=url;
+  fetchReel(url, mode, title);
+}
+function switchTab(tab){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
   document.getElementById('bnav-'+tab).classList.add('active');
   window.scrollTo(0,0);
 }
-
-function showToast(msg) {
-  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
-
-function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 </script>
 </body>
 </html>
