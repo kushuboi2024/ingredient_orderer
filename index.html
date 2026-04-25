@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe Reel — Cook what you scroll</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0D0D0D; --surface:#161616; --surface2:#1E1E1E;
+  --border:rgba(255,255,255,0.08); --accent:#FF5C00;
+  --text:#F5F0E8; --muted:rgba(245,240,232,0.45);
+  --green:#2ECC71; --green-bg:rgba(46,204,113,0.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-filter:blur(16px);border-bottom:0.5px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:8px;font-family:'Playfair Display',serif;font-size:19px;font-weight:700;}
+.logo-dot{width:7px;height:7px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.nav-badge{font-size:11px;background:rgba(255,92,0,0.12);border:0.5px solid rgba(255,92,0,0.25);color:var(--accent);padding:3px 10px;border-radius:10px;}
+
+.tab-content{display:none;padding-bottom:80px;}
+.tab-content.active{display:block;}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,13,0.95);backdrop-filter:blur(16px);border-top:0.5px solid var(--border);display:flex;padding:7px 0 12px;z-index:100;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;}
+.bnav-icon{font-size:19px;}
+.bnav-label{font-size:10px;color:var(--muted);font-weight:500;transition:color 0.2s;}
+.bnav-item.active .bnav-label{color:var(--accent);}
+
+/* HERO */
+.scan-hero{padding:28px 20px 16px;text-align:center;}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,0.1);border:0.5px solid rgba(255,92,0,0.25);color:var(--accent);font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+.scan-hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,6vw,40px);font-weight:700;line-height:1.1;letter-spacing:-0.5px;margin-bottom:8px;}
+.scan-hero h1 span{color:var(--accent);}
+.scan-hero p{font-size:13px;color:var(--muted);max-width:320px;margin:0 auto;line-height:1.6;}
+
+/* URL BOX */
+.url-box{margin:16px 20px;background:var(--surface);border:0.5px solid var(--border);border-radius:18px;overflow:hidden;}
+.url-input-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:0.5px solid var(--border);}
+.url-icon{font-size:16px;flex-shrink:0;}
+.url-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;}
+.url-input::placeholder{color:var(--muted);}
+.url-fetch-btn{background:var(--accent);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all 0.2s;flex-shrink:0;}
+.url-fetch-btn:disabled{background:var(--surface2);color:var(--muted);cursor:not-allowed;}
+
+/* THUMBNAIL GRID — portrait style like Instagram */
+.thumb-grid-label{font-size:10px;color:var(--muted);padding:12px 14px 8px;display:block;}
+.thumb-grid{display:flex;gap:10px;padding:0 14px 14px;overflow-x:auto;scrollbar-width:none;}
+.thumb-grid::-webkit-scrollbar{display:none;}
+.thumb-card{flex-shrink:0;width:130px;border-radius:12px;overflow:hidden;background:var(--surface2);border:1.5px solid transparent;cursor:pointer;transition:border-color 0.2s,transform 0.2s;position:relative;}
+.thumb-card:hover{border-color:rgba(255,92,0,0.5);transform:translateY(-2px);}
+.thumb-card.active{border-color:var(--accent);}
+.thumb-img{width:100%;height:180px;object-fit:cover;display:block;}
+.thumb-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-65%);width:32px;height:32px;background:rgba(0,0,0,0.55);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.25);}
+.play-tri{width:0;height:0;border-style:solid;border-width:5px 0 5px 10px;border-color:transparent transparent transparent white;margin-left:2px;}
+.thumb-yt{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.65);color:white;font-size:9px;padding:2px 6px;border-radius:5px;text-decoration:none;border:0.5px solid rgba(255,255,255,0.2);}
+.thumb-yt:hover{background:var(--accent);}
+.thumb-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.85));padding:18px 8px 8px;}
+.thumb-name{font-size:11px;font-weight:600;line-height:1.3;color:white;}
+.thumb-creator{font-size:9px;color:rgba(255,255,255,0.5);margin-top:2px;}
+
+/* LOADING */
+.loading-state{padding:28px 20px;text-align:center;display:none;}
+.loading-state.show{display:block;}
+.loading-spinner{width:30px;height:30px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-steps{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+.loading-step{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;justify-content:center;}
+.loading-step.done{color:var(--green);}
+.loading-step.active{color:var(--text);}
+
+/* ERROR */
+.error-state{margin:0 20px;padding:14px 16px;background:rgba(226,75,74,0.08);border:0.5px solid rgba(226,75,74,0.25);border-radius:12px;display:none;}
+.error-state.show{display:block;}
+.error-title{font-size:13px;font-weight:600;color:#E24B4A;margin-bottom:4px;}
+.error-sub{font-size:12px;color:var(--muted);line-height:1.5;}
+
+/* RESULT PANEL */
+.result-panel{margin:14px 20px;background:var(--surface);border:0.5px solid var(--border);border-radius:18px;overflow:hidden;display:none;}
+.result-panel.show{display:block;animation:fadeUp 0.3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.result-media{position:relative;}
+.result-thumb{width:100%;height:170px;object-fit:cover;display:block;background:var(--surface2);}
+.result-thumb-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:20px 14px 12px;}
+.result-dish-name{font-size:15px;font-weight:700;font-family:'Playfair Display',serif;}
+.result-creator{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.result-platform-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;}
+.result-body{padding:14px 16px;}
+.result-section-label{font-size:10px;color:var(--muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;}
+.caption-box{background:var(--surface2);border-radius:10px;padding:9px 12px;font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px;border:0.5px solid var(--border);}
+.serving-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border);margin-bottom:10px;}
+.serving-label{font-size:12px;color:var(--muted);}
+.serving-ctrl{display:flex;align-items:center;gap:10px;}
+.serving-btn{width:26px;height:26px;border-radius:50%;background:var(--surface2);border:0.5px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:300;}
+.serving-val{font-size:14px;font-weight:600;min-width:20px;text-align:center;}
+.ing-list{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.ing-row{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--surface2);border-radius:8px;font-size:13px;}
+.ing-left{display:flex;align-items:center;gap:9px;}
+.ing-check{width:17px;height:17px;border-radius:4px;border:1.5px solid rgba(255,255,255,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.ing-check.checked{background:var(--accent);border-color:var(--accent);}
+.ing-qty{font-size:11px;color:var(--muted);white-space:nowrap;}
+.action-row{display:flex;gap:8px;}
+.cart-btn{flex:2;padding:12px;background:var(--accent);color:white;font-size:13px;font-weight:600;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.cart-btn:hover{background:#FF7A2E;}
+.cart-btn.success{background:var(--green);}
+.save-btn{flex:1;padding:12px;background:var(--surface2);color:var(--text);font-size:13px;font-weight:600;border:0.5px solid var(--border);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.save-btn.saved{color:var(--green);border-color:rgba(46,204,113,0.3);}
+
+/* WISHLIST */
+.wl-header{padding:22px 20px 14px;}
+.wl-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;}
+.wl-sub{font-size:12px;color:var(--muted);margin-top:3px;}
+.wl-empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px;}
+.wl-empty-icon{font-size:36px;margin-bottom:12px;}
+.wl-items{padding:0 20px;display:flex;flex-direction:column;gap:10px;}
+.wl-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;}
+.wl-card-head{display:flex;gap:12px;padding:12px 14px;border-bottom:0.5px solid var(--border);align-items:center;}
+.wl-thumb{width:60px;height:60px;object-fit:cover;border-radius:8px;background:var(--surface2);flex-shrink:0;}
+.wl-card-info{flex:1;min-width:0;}
+.wl-card-title{font-size:13px;font-weight:600;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.4;}
+.wl-card-meta{font-size:11px;color:var(--muted);}
+.wl-card-actions{display:flex;gap:6px;padding:10px 14px;}
+.wl-order-btn{flex:1;padding:10px;background:rgba(255,92,0,0.08);border:0.5px solid rgba(255,92,0,0.25);color:var(--accent);font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.wl-order-btn:hover{background:rgba(255,92,0,0.15);}
+.wl-remove-btn{padding:10px 14px;background:var(--surface2);border:0.5px solid var(--border);color:var(--muted);font-size:12px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.group-section{padding:0 20px;margin-top:16px;}
+.group-label{font-size:10px;color:var(--muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;}
+.group-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:8px;}
+.group-head{padding:12px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.group-left{display:flex;align-items:center;gap:10px;}
+.group-emoji{font-size:20px;}
+.group-name{font-size:13px;font-weight:600;}
+.group-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.group-badge{font-size:10px;padding:3px 9px;border-radius:8px;background:rgba(255,92,0,0.1);color:var(--accent);font-weight:500;}
+.group-order-btn{margin:10px 14px 12px;padding:10px;background:rgba(255,92,0,0.08);border:0.5px solid rgba(255,92,0,0.25);color:var(--accent);font-size:12px;font-weight:600;border-radius:9px;cursor:pointer;width:calc(100% - 28px);font-family:'DM Sans',sans-serif;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.group-order-btn:hover{background:rgba(255,92,0,0.15);}
+
+/* ORDER SUMMARY MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.show{display:flex;animation:fadeIn 0.2s;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 28px;max-height:88vh;overflow-y:auto;}
+.modal-sheet::-webkit-scrollbar{display:none;}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 16px;}
+.modal-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;padding:0 20px;margin-bottom:4px;}
+.modal-sub{font-size:12px;color:var(--muted);padding:0 20px;margin-bottom:14px;}
+.modal-platform{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--green-bg);border-radius:10px;margin:0 20px 14px;}
+.modal-platform-text{font-size:12px;color:var(--green);font-weight:500;}
+.modal-items{padding:0 20px;display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.modal-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--surface2);border-radius:8px;}
+.modal-item-name{font-size:13px;flex:1;}
+.modal-item-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.modal-item-qty{font-size:11px;color:var(--muted);}
+.modal-item-price{font-size:12px;font-weight:500;min-width:32px;text-align:right;}
+.modal-divider{height:0.5px;background:var(--border);margin:0 20px 12px;}
+.modal-total-row{display:flex;justify-content:space-between;align-items:center;padding:4px 20px;}
+.modal-total-label{font-size:13px;color:var(--muted);}
+.modal-total-val{font-size:13px;font-weight:500;}
+.modal-grand{display:flex;justify-content:space-between;align-items:center;padding:10px 20px 16px;}
+.modal-grand-label{font-size:15px;font-weight:600;}
+.modal-grand-val{font-size:20px;font-weight:700;color:var(--accent);}
+.modal-actions{padding:0 20px;display:flex;flex-direction:column;gap:8px;}
+.modal-confirm-btn{width:100%;padding:14px;background:var(--accent);color:white;font-size:14px;font-weight:600;border:none;border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.modal-confirm-btn:hover{background:#FF7A2E;}
+.modal-cancel-btn{width:100%;padding:12px;background:transparent;color:var(--muted);font-size:13px;border:0.5px solid var(--border);border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--green);color:white;padding:9px 18px;border-radius:18px;font-size:12px;font-weight:600;opacity:0;transition:all 0.25s;z-index:999;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><div class="logo-dot"></div>Recipe Reel</div>
+  <div class="nav-badge">Swiggy Builders Demo</div>
+</nav>
+
+<!-- ═══ SCAN TAB ═══ -->
+<div class="tab-content active" id="tab-scan">
+  <div class="scan-hero">
+    <div class="hero-pill"><div style="width:5px;height:5px;background:var(--accent);border-radius:50%;"></div>Paste any food reel link</div>
+    <h1>Saw it.<br><span>Cook it.</span></h1>
+    <p>Share a YouTube Short or food reel. We extract the ingredients and fill your Instamart cart in one tap.</p>
+  </div>
+
+  <div class="url-box">
+    <div class="url-input-row">
+      <div class="url-icon">🔗</div>
+      <input class="url-input" id="url-input" type="url" placeholder="Paste YouTube Short or reel link..."/>
+      <button class="url-fetch-btn" id="fetch-btn" onclick="fetchReel()">Extract</button>
+    </div>
+    <span class="thumb-grid-label">Trending food reels — tap to load</span>
+    <div class="thumb-grid">
+      <div class="thumb-card" onclick="fillAndFetch('https://www.youtube.com/shorts/QAPb7HbPuF4')">
+        <img class="thumb-img" src="https://img.youtube.com/vi/QAPb7HbPuF4/mqdefault.jpg" alt="Chicken Biryani">
+        <div class="thumb-play"><div class="play-tri"></div></div>
+        <a class="thumb-yt" href="https://www.youtube.com/shorts/QAPb7HbPuF4" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+        <div class="thumb-overlay"><div class="thumb-name">Chicken Biryani</div></div>
+      </div>
+      <div class="thumb-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=tnvz3uA0vMY')">
+        <img class="thumb-img" src="https://img.youtube.com/vi/tnvz3uA0vMY/mqdefault.jpg" alt="Shakshuka">
+        <div class="thumb-play"><div class="play-tri"></div></div>
+        <a class="thumb-yt" href="https://www.youtube.com/watch?v=tnvz3uA0vMY" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+        <div class="thumb-overlay"><div class="thumb-name">Perfect Shakshuka</div></div>
+      </div>
+      <div class="thumb-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=DOjNC_BkZiM')">
+        <img class="thumb-img" src="https://img.youtube.com/vi/DOjNC_BkZiM/mqdefault.jpg" alt="Authentic Biryani">
+        <div class="thumb-play"><div class="play-tri"></div></div>
+        <a class="thumb-yt" href="https://www.youtube.com/watch?v=DOjNC_BkZiM" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+        <div class="thumb-overlay"><div class="thumb-name">Authentic Biryani</div></div>
+      </div>
+      <div class="thumb-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=nf57BA3i5Rg')">
+        <img class="thumb-img" src="https://img.youtube.com/vi/nf57BA3i5Rg/mqdefault.jpg" alt="Easy Biryani">
+        <div class="thumb-play"><div class="play-tri"></div></div>
+        <a class="thumb-yt" href="https://www.youtube.com/watch?v=nf57BA3i5Rg" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+        <div class="thumb-overlay"><div class="thumb-name">Easy Biryani</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-state" id="loading-state">
+    <div class="loading-spinner"></div>
+    <div style="font-size:13px;color:var(--muted);">Fetching reel details...</div>
+    <div class="loading-steps" id="loading-steps"></div>
+  </div>
+
+  <div class="error-state" id="error-state">
+    <div class="error-title">Couldn't extract ingredients</div>
+    <div class="error-sub" id="error-msg">Try a YouTube link — Instagram links require the user to paste the caption manually.</div>
+  </div>
+
+  <div class="result-panel" id="result-panel">
+    <div class="result-media">
+      <img class="result-thumb" id="result-thumb" src="" alt="">
+      <div class="result-platform-badge" id="platform-badge">YouTube</div>
+      <div class="result-thumb-overlay">
+        <div class="result-dish-name" id="result-dish"></div>
+        <div class="result-creator" id="result-creator"></div>
+      </div>
+    </div>
+    <div class="result-body">
+      <div class="result-section-label">Video info</div>
+      <div class="caption-box" id="caption-box"></div>
+      <div class="result-section-label">Ingredients — <span style="color:var(--accent);font-size:10px;">auto-matched</span></div>
+      <div class="serving-row">
+        <div class="serving-label">Servings</div>
+        <div class="serving-ctrl">
+          <button class="serving-btn" onclick="changeServings(-1)">−</button>
+          <div class="serving-val" id="serving-val">2</div>
+          <button class="serving-btn" onclick="changeServings(1)">+</button>
+        </div>
+      </div>
+      <div class="ing-list" id="ing-list"></div>
+      <div class="action-row">
+        <button class="cart-btn" id="cart-btn" onclick="addToCart()">
+          <span>🛒</span><span id="cart-txt">Order now on Instamart</span>
+        </button>
+        <button class="save-btn" id="save-btn" onclick="saveToWishlist()">
+          <span>🔖</span><span>Save</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WISHLIST TAB ═══ -->
+<div class="tab-content" id="tab-wishlist">
+  <div class="wl-header">
+    <div class="wl-title">Wishlist</div>
+    <div class="wl-sub">Save recipes to order later</div>
+  </div>
+
+  <div style="margin:0 20px 16px;">
+    <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
+        <div style="font-size:16px;flex-shrink:0;">🔗</div>
+        <input id="wl-url-input" type="url" placeholder="Paste YouTube link to save..." style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;"/>
+        <button onclick="saveFromUrl()" id="wl-save-btn" style="background:var(--accent);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="wl-empty" class="wl-empty">
+    <div class="wl-empty-icon">🔖</div>
+    <div>No saved recipes yet</div>
+    <div style="font-size:11px;margin-top:4px;">Paste a link above or tap Save on any recipe</div>
+  </div>
+
+  <div class="wl-items" id="wl-items"></div>
+
+  <div id="group-section" class="group-section" style="display:none;">
+    <div class="group-label">Smart grouping — order all at once</div>
+    <div id="group-cards"></div>
+  </div>
+</div>
+
+<!-- ORDER SUMMARY MODAL -->
+<div class="modal-overlay" id="order-modal" onclick="closeModalOnBg(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Order summary</div>
+    <div class="modal-sub" id="modal-sub">2 servings · Delivered in ~10 mins</div>
+    <div class="modal-platform">
+      <div style="font-size:16px;">🛒</div>
+      <div class="modal-platform-text">Will be ordered via Swiggy Instamart</div>
+    </div>
+    <div class="modal-items" id="modal-items"></div>
+    <div class="modal-divider"></div>
+    <div class="modal-total-row"><div class="modal-total-label">Subtotal</div><div class="modal-total-val" id="modal-subtotal">₹0</div></div>
+    <div class="modal-total-row"><div class="modal-total-label">Delivery fee</div><div class="modal-total-val">₹25</div></div>
+    <div class="modal-total-row"><div class="modal-total-label">Platform fee</div><div class="modal-total-val">₹5</div></div>
+    <div class="modal-divider"></div>
+    <div class="modal-grand"><div class="modal-grand-label">Total</div><div class="modal-grand-val" id="modal-total">₹0</div></div>
+    <div class="modal-actions">
+      <button class="modal-confirm-btn" onclick="confirmOrder()">Confirm & go to Instamart ↗</button>
+      <button class="modal-cancel-btn" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <div class="bnav-item active" id="bnav-scan" onclick="switchTab('scan')">
+    <div class="bnav-icon">🔍</div>
+    <div class="bnav-label">Scan reel</div>
+  </div>
+  <div class="bnav-item" id="bnav-wishlist" onclick="switchTab('wishlist')">
+    <div class="bnav-icon">🔖</div>
+    <div class="bnav-label">Wishlist</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let currentIngredients = [];
+let currentServings = 2;
+let currentBaseServings = 2;
+let currentMeta = {};
+let wishlist = [];
+
+function extractYouTubeId(url) {
+  const patterns = [
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+    /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+  ];
+  for (const p of patterns) { const m = url.match(p); if (m) return m[1]; }
+  return null;
+}
+
+function setLoadingStep(steps, activeIdx) {
+  document.getElementById('loading-steps').innerHTML = steps.map((s,i) => {
+    let cls = 'loading-step' + (i < activeIdx ? ' done' : i === activeIdx ? ' active' : '');
+    const icon = i < activeIdx ? '✓' : (i === activeIdx ? '◉' : '○');
+    return `<div class="${cls}"><span>${icon}</span><span>${s}</span></div>`;
+  }).join('');
+}
+
+async function fetchReel() {
+  const url = document.getElementById('url-input').value.trim();
+  if (!url) { showToast('Paste a link first'); return; }
+  document.getElementById('result-panel').classList.remove('show');
+  document.getElementById('error-state').classList.remove('show');
+  document.getElementById('loading-state').classList.add('show');
+  document.getElementById('fetch-btn').disabled = true;
+  const steps = ['Fetching reel info','Reading title & thumbnail','Matching ingredients'];
+  try {
+    if (url.includes('instagram.com')) {
+      setLoadingStep(steps,0); await sleep(500); setLoadingStep(steps,1); await sleep(300);
+      document.getElementById('loading-state').classList.remove('show');
+      document.getElementById('error-state').classList.add('show');
+      document.getElementById('error-msg').textContent = 'Instagram blocks external access. Use a YouTube link for now.';
+      document.getElementById('fetch-btn').disabled = false;
+      return;
+    }
+    const ytId = extractYouTubeId(url);
+    if (!ytId) throw new Error('Unrecognised link. Try a YouTube Short or youtube.com/watch link.');
+
+    setLoadingStep(steps,0);
+    let title = 'Food Recipe', author = 'YouTube';
+    for (const proxy of [`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`,`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${ytId}&format=json`]) {
+      try { const r = await fetch(proxy); if (r.ok) { const d = await r.json(); title = d.title||title; author = d.author_name||author; break; } } catch(e) {}
+    }
+
+    setLoadingStep(steps,1); await sleep(300);
+    const thumbUrl = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
+
+    setLoadingStep(steps,2); await sleep(400);
+    const ingredients = getIngredients(title);
+
+    document.getElementById('loading-state').classList.remove('show');
+    currentIngredients = ingredients;
+    currentServings = 2; currentBaseServings = 2;
+    currentMeta = {title, author, thumbUrl, ytId};
+    document.getElementById('result-thumb').src = thumbUrl;
+    document.getElementById('result-dish').textContent = title;
+    document.getElementById('result-creator').textContent = author;
+    document.getElementById('platform-badge').textContent = url.includes('shorts') ? 'YouTube Shorts' : 'YouTube';
+    document.getElementById('caption-box').textContent = '"' + title + '" by ' + author;
+    document.getElementById('cart-btn').classList.remove('success');
+    document.getElementById('cart-txt').textContent = 'Order now on Instamart';
+    document.getElementById('save-btn').classList.remove('saved');
+    document.getElementById('save-btn').innerHTML = '<span>🔖</span><span>Save</span>';
+    renderIngredients();
+    document.getElementById('result-panel').classList.add('show');
+    document.getElementById('fetch-btn').disabled = false;
+  } catch(err) {
+    document.getElementById('loading-state').classList.remove('show');
+    document.getElementById('error-state').classList.add('show');
+    document.getElementById('error-msg').textContent = err.message || 'Something went wrong. Try again.';
+    document.getElementById('fetch-btn').disabled = false;
+  }
+}
+
+function getIngredients(title) {
+  const t = (title||'').toLowerCase();
+  if (t.includes('biryani')) return [
+    {name:'Chicken (curry cut)',qty:400,unit:'g'},{name:'Basmati rice',qty:200,unit:'g'},
+    {name:'Yogurt',qty:150,unit:'g'},{name:'Onion',qty:2,unit:'pcs'},
+    {name:'Biryani masala',qty:2,unit:'tbsp'},{name:'Ginger garlic paste',qty:1,unit:'tbsp'},
+    {name:'Ghee',qty:2,unit:'tbsp'},{name:'Mint leaves',qty:10,unit:'g'},
+    {name:'Saffron',qty:1,unit:'pinch'},{name:'Fried onions',qty:30,unit:'g'}
+  ];
+  if (t.includes('shakshuka')) return [
+    {name:'Eggs',qty:4,unit:'pcs'},{name:'Crushed tomatoes',qty:400,unit:'g'},
+    {name:'Onion',qty:1,unit:'pcs'},{name:'Red bell pepper',qty:1,unit:'pcs'},
+    {name:'Olive oil',qty:2,unit:'tbsp'},{name:'Garlic',qty:2,unit:'pcs'},
+    {name:'Cumin',qty:1,unit:'tsp'},{name:'Paprika',qty:1,unit:'tsp'},
+    {name:'Feta cheese',qty:50,unit:'g'}
+  ];
+  if (t.includes('pasta')||t.includes('pesto')) return [
+    {name:'Pasta (penne)',qty:200,unit:'g'},{name:'Fresh basil',qty:20,unit:'g'},
+    {name:'Parmesan',qty:60,unit:'g'},{name:'Pine nuts',qty:30,unit:'g'},
+    {name:'Garlic',qty:2,unit:'pcs'},{name:'Olive oil',qty:4,unit:'tbsp'},
+    {name:'Cherry tomatoes',qty:100,unit:'g'}
+  ];
+  if (t.includes('pancake')) return [
+    {name:'All-purpose flour',qty:150,unit:'g'},{name:'Eggs',qty:2,unit:'pcs'},
+    {name:'Milk',qty:200,unit:'ml'},{name:'Butter',qty:30,unit:'g'},
+    {name:'Baking powder',qty:1,unit:'tsp'},{name:'Sugar',qty:1,unit:'tbsp'}
+  ];
+  if (t.includes('dal')||t.includes('lentil')) return [
+    {name:'Red lentils',qty:150,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},
+    {name:'Tomato',qty:2,unit:'pcs'},{name:'Garlic',qty:3,unit:'pcs'},
+    {name:'Cumin seeds',qty:1,unit:'tsp'},{name:'Turmeric',qty:0.5,unit:'tsp'},{name:'Ghee',qty:1,unit:'tbsp'}
+  ];
+  if (t.includes('noodle')||t.includes('fried rice')) return [
+    {name:'Noodles',qty:200,unit:'g'},{name:'Eggs',qty:2,unit:'pcs'},
+    {name:'Spring onion',qty:2,unit:'pcs'},{name:'Soy sauce',qty:2,unit:'tbsp'},
+    {name:'Garlic',qty:2,unit:'pcs'},{name:'Sesame oil',qty:1,unit:'tbsp'},{name:'Mixed veg',qty:100,unit:'g'}
+  ];
+  if (t.includes('egg')||t.includes('omelette')) return [
+    {name:'Eggs',qty:3,unit:'pcs'},{name:'Onion',qty:1,unit:'pcs'},
+    {name:'Tomato',qty:1,unit:'pcs'},{name:'Green chilli',qty:1,unit:'pcs'},
+    {name:'Butter',qty:1,unit:'tbsp'},{name:'Salt + pepper',qty:1,unit:'to taste'}
+  ];
+  return [
+    {name:'Main protein',qty:300,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},
+    {name:'Garlic',qty:3,unit:'pcs'},{name:'Tomatoes',qty:2,unit:'pcs'},
+    {name:'Oil',qty:2,unit:'tbsp'},{name:'Salt + spices',qty:1,unit:'to taste'}
+  ];
+}
+
+function formatQty(qty, unit, servings) {
+  if (!qty || unit === 'pinch' || unit === 'to taste') return unit;
+  const scaled = (qty / currentBaseServings) * servings;
+  const countUnits = ['pcs','piece','pieces','clove','cloves','medium','large','small'];
+  if (countUnits.includes(unit.toLowerCase())) return Math.max(1,Math.round(scaled)) + ' ' + unit;
+  if (scaled >= 10) return Math.round(scaled) + ' ' + unit;
+  const r = Math.round(scaled*2)/2;
+  return (r%1===0?r:r.toFixed(1)) + ' ' + unit;
+}
+
+function renderIngredients() {
+  document.getElementById('serving-val').textContent = currentServings;
+  document.getElementById('ing-list').innerHTML = currentIngredients.map((ing,i) => `
+    <div class="ing-row">
+      <div class="ing-left">
+        <div class="ing-check" id="chk-${i}" onclick="toggleCheck(${i})"></div>
+        <div>${ing.name}</div>
+      </div>
+      <div class="ing-qty">${formatQty(ing.qty,ing.unit,currentServings)}</div>
+    </div>`).join('');
+}
+
+function changeServings(d) { currentServings = Math.max(1,Math.min(8,currentServings+d)); renderIngredients(); }
+
+function toggleCheck(i) {
+  const el = document.getElementById('chk-'+i);
+  el.classList.toggle('checked');
+  el.innerHTML = el.classList.contains('checked') ? '<svg width="9" height="9" viewBox="0 0 9 9"><path d="M1.5 4.5l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>' : '';
+}
+
+// Ingredient price estimation
+const PRICES = {
+  'g': n => n.includes('chicken')||n.includes('meat')||n.includes('fish') ? 0.28 : n.includes('rice')||n.includes('basmati') ? 0.12 : n.includes('yogurt') ? 0.08 : n.includes('cheese')||n.includes('feta')||n.includes('parmesan') ? 0.6 : n.includes('flour') ? 0.06 : 0.15,
+  'pcs': n => n.includes('egg') ? 8 : n.includes('onion') ? 12 : n.includes('tomato') ? 10 : n.includes('pepper')||n.includes('capsicum') ? 20 : n.includes('garlic') ? 3 : n.includes('lemon') ? 8 : 15,
+  'tbsp': () => 4, 'tsp': () => 2, 'ml': () => 0.08,
+  'pinch': () => 2, 'to taste': () => 3,
+};
+function estimatePrice(ing) {
+  const name = ing.name.toLowerCase();
+  const unit = (ing.unit||'').toLowerCase();
+  const fn = PRICES[unit] || (() => 20);
+  return Math.max(5, Math.round(ing.qty * (typeof fn==='function' ? fn(name) : fn)));
+}
+
+function addToCart() {
+  const scaled = currentIngredients.map(ing => ({
+    ...ing,
+    scaledQty: (ing.qty/currentBaseServings)*currentServings,
+    price: estimatePrice({...ing, qty:(ing.qty/currentBaseServings)*currentServings})
+  }));
+  const subtotal = scaled.reduce((s,i) => s+i.price, 0);
+  const total = subtotal + 30;
+
+  document.getElementById('modal-sub').textContent = currentServings + ' serving' + (currentServings>1?'s':'') + ' · ' + currentIngredients.length + ' items · Delivered in ~10 mins';
+  document.getElementById('modal-subtotal').textContent = '₹' + subtotal;
+  document.getElementById('modal-total').textContent = '₹' + total;
+
+  const countU = ['pcs','piece','pieces','clove','cloves','medium','large','small'];
+  document.getElementById('modal-items').innerHTML = scaled.map(ing => {
+    const isCount = countU.includes((ing.unit||'').toLowerCase());
+    const q = isCount ? Math.max(1,Math.round(ing.scaledQty)) : ing.scaledQty>=10 ? Math.round(ing.scaledQty) : Math.round(ing.scaledQty*2)/2;
+    const qStr = (ing.unit==='pinch'||ing.unit==='to taste') ? ing.unit : q+' '+ing.unit;
+    return `<div class="modal-item"><div class="modal-item-name">${ing.name}</div><div class="modal-item-right"><div class="modal-item-qty">${qStr}</div><div class="modal-item-price">₹${ing.price}</div></div></div>`;
+  }).join('');
+
+  document.getElementById('order-modal').classList.add('show');
+}
+
+function closeModal() { document.getElementById('order-modal').classList.remove('show'); }
+function closeModalOnBg(e) { if(e.target===document.getElementById('order-modal')) closeModal(); }
+
+function confirmOrder() {
+  closeModal();
+  document.getElementById('cart-btn').classList.add('success');
+  document.getElementById('cart-txt').textContent = 'Opening Instamart... ↗';
+  showToast('Redirecting to Instamart!');
+  setTimeout(() => window.open('https://www.swiggy.com/instamart','_blank'), 600);
+}
+
+function saveToWishlist() {
+  if (!currentMeta.ytId) return;
+  if (wishlist.find(w=>w.ytId===currentMeta.ytId)) { showToast('Already in wishlist!'); return; }
+  wishlist.push({...currentMeta, ingredients:currentIngredients, servings:currentServings});
+  document.getElementById('save-btn').classList.add('saved');
+  document.getElementById('save-btn').innerHTML = '<span>✓</span><span>Saved</span>';
+  showToast('Saved to Wishlist!');
+  renderWishlist();
+}
+
+async function saveFromUrl() {
+  const url = document.getElementById('wl-url-input').value.trim();
+  if (!url) { showToast('Paste a YouTube link first'); return; }
+  const ytId = extractYouTubeId(url);
+  if (!ytId) { showToast('Only YouTube links supported'); return; }
+  if (wishlist.find(w=>w.ytId===ytId)) { showToast('Already in wishlist!'); return; }
+  const btn = document.getElementById('wl-save-btn');
+  btn.textContent = '...'; btn.disabled = true;
+  try {
+    let title = 'Food Recipe', author = 'YouTube';
+    for (const proxy of [`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`,`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${ytId}&format=json`]) {
+      try { const r = await fetch(proxy); if(r.ok){const d=await r.json();title=d.title||title;author=d.author_name||author;break;} } catch(e) {}
+    }
+    const thumbUrl = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
+    wishlist.push({title, author, thumbUrl, ytId, ingredients:getIngredients(title), servings:2});
+    document.getElementById('wl-url-input').value = '';
+    renderWishlist();
+    showToast('Saved to Wishlist!');
+  } catch(e) { showToast('Could not fetch — check the link'); }
+  btn.textContent = 'Save'; btn.disabled = false;
+}
+
+function renderWishlist() {
+  const empty = document.getElementById('wl-empty');
+  const items = document.getElementById('wl-items');
+  const grp = document.getElementById('group-section');
+  if (wishlist.length===0) { empty.style.display='block'; items.innerHTML=''; grp.style.display='none'; return; }
+  empty.style.display='none';
+  items.innerHTML = wishlist.map((w,i) => `
+    <div class="wl-card">
+      <div class="wl-card-head">
+        <img class="wl-thumb" src="${w.thumbUrl}" alt="">
+        <div class="wl-card-info">
+          <div class="wl-card-title">${w.title}</div>
+          <div class="wl-card-meta">${w.author} · ${w.ingredients.length} ingredients</div>
+        </div>
+      </div>
+      <div class="wl-card-actions">
+        <button class="wl-order-btn" onclick="orderWishlist(${i})">🛒 Order ingredients</button>
+        <button class="wl-remove-btn" onclick="removeWishlist(${i})">Remove</button>
+      </div>
+    </div>`).join('');
+  if (wishlist.length>=2) { grp.style.display='block'; renderSmartGroups(); } else { grp.style.display='none'; }
+}
+
+function renderSmartGroups() {
+  const all = wishlist.flatMap(w=>w.ingredients.map(i=>i.name.toLowerCase()));
+  const unique = [...new Set(all)].length;
+  const saved = all.length - unique;
+  document.getElementById('group-cards').innerHTML = `
+    <div class="group-card">
+      <div class="group-head">
+        <div class="group-left"><div class="group-emoji">🧠</div>
+          <div><div class="group-name">All ${wishlist.length} recipes combined</div>
+          <div class="group-sub">${unique} unique ingredients · ${saved} duplicates removed</div></div>
+        </div>
+        <div class="group-badge">Save ${saved} items</div>
+      </div>
+      <button class="group-order-btn" onclick="orderAllWishlist()">🛒 Order all — deduplicated cart</button>
+    </div>`;
+}
+
+function orderAllWishlist() {
+  const combined = wishlist.flatMap(w=>w.ingredients);
+  currentIngredients = combined; currentServings = 2; currentBaseServings = 2;
+  currentMeta = {title:'All wishlist recipes', author:'', thumbUrl:''};
+  addToCart();
+}
+
+function orderWishlist(i) {
+  const w = wishlist[i];
+  currentIngredients = w.ingredients; currentServings = w.servings||2; currentBaseServings = 2;
+  currentMeta = w;
+  addToCart();
+}
+
+function removeWishlist(i) { wishlist.splice(i,1); renderWishlist(); showToast('Removed'); }
+
+function fillAndFetch(url) { document.getElementById('url-input').value=url; fetchReel(); }
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('bnav-'+tab).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+</script>
+</body>
+</html>
