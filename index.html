@@ -483,40 +483,47 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.88);backdrop-filte
 </div>
 
 <!-- ORDER MODAL -->
-<div class="modal-overlay" id="order-modal" onclick="closeModalOnBg(event)">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div style="padding:0 20px 14px;">
-      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px;">Order summary</div>
-      <div style="font-size:12px;color:var(--muted);" id="modal-sub"></div>
+<div id="order-modal" onclick="closeModalOnBg(event)" style="position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);">
+  <div onclick="event.stopPropagation()" style="background:#111;border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:0 0 32px;max-height:90vh;overflow-y:auto;">
+    <!-- Handle -->
+    <div style="width:40px;height:4px;background:rgba(255,255,255,0.12);border-radius:2px;margin:14px auto 16px;"></div>
+    <!-- Title -->
+    <div style="padding:0 20px 12px;">
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#F5F0E8;margin-bottom:3px;">Order summary</div>
+      <div style="font-size:12px;color:rgba(245,240,232,0.45);" id="modal-sub"></div>
     </div>
-    <div style="margin:0 20px 14px;padding:10px 14px;background:var(--green-bg);border:0.5px solid rgba(46,204,113,0.2);border-radius:12px;display:flex;align-items:center;gap:10px;">
+    <!-- Platform bar -->
+    <div style="margin:0 20px 14px;padding:10px 14px;background:rgba(46,204,113,0.1);border:0.5px solid rgba(46,204,113,0.2);border-radius:12px;display:flex;align-items:center;gap:10px;">
       <div style="font-size:18px;">🛒</div>
-      <div style="font-size:12px;font-weight:600;color:var(--green);">Ordering via Swiggy Instamart</div>
+      <div style="font-size:12px;font-weight:600;color:#2ECC71;">Ordering via Swiggy Instamart</div>
     </div>
-    <div style="padding:0 20px 8px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Items — tap +/− to adjust</div>
-    <div class="modal-items" id="modal-items"></div>
-    <div style="margin:0 20px 16px;background:var(--surface2);border-radius:14px;overflow:hidden;border:0.5px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid var(--border);">
-        <div style="font-size:13px;color:var(--muted);">Subtotal</div>
-        <div style="font-size:13px;font-weight:500;" id="modal-subtotal">₹0</div>
+    <!-- Items label -->
+    <div style="padding:0 20px 8px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(245,240,232,0.45);">Items — tap +/− to adjust</div>
+    <!-- Items list -->
+    <div id="modal-items" style="padding:0 20px;display:flex;flex-direction:column;gap:5px;margin-bottom:14px;"></div>
+    <!-- Totals card -->
+    <div style="margin:0 20px 16px;background:#1a1a1a;border-radius:14px;overflow:hidden;border:0.5px solid rgba(255,255,255,0.07);">
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid rgba(255,255,255,0.07);">
+        <div style="font-size:13px;color:rgba(245,240,232,0.45);">Subtotal</div>
+        <div style="font-size:13px;font-weight:500;color:#F5F0E8;" id="modal-subtotal">₹0</div>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid var(--border);">
-        <div style="font-size:13px;color:var(--muted);">Delivery fee</div>
-        <div style="font-size:13px;font-weight:500;">₹25</div>
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid rgba(255,255,255,0.07);">
+        <div style="font-size:13px;color:rgba(245,240,232,0.45);">Delivery fee</div>
+        <div style="font-size:13px;font-weight:500;color:#F5F0E8;">₹25</div>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid var(--border);">
-        <div style="font-size:13px;color:var(--muted);">Platform fee</div>
-        <div style="font-size:13px;font-weight:500;">₹5</div>
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid rgba(255,255,255,0.07);">
+        <div style="font-size:13px;color:rgba(245,240,232,0.45);">Platform fee</div>
+        <div style="font-size:13px;font-weight:500;color:#F5F0E8;">₹5</div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;">
-        <div style="font-size:15px;font-weight:700;">Total</div>
-        <div style="font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="modal-total">₹0</div>
+        <div style="font-size:15px;font-weight:700;color:#F5F0E8;">Total</div>
+        <div style="font-size:20px;font-weight:700;color:#FF5C00;" id="modal-total">₹0</div>
       </div>
     </div>
-    <div style="padding:0 20px 4px;display:flex;flex-direction:column;gap:8px;">
-      <button onclick="confirmOrder()" style="width:100%;padding:15px;background:linear-gradient(135deg,#FF5C00,#FF8C42);color:white;font-size:14px;font-weight:700;border:none;border-radius:14px;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 6px 20px rgba(255,92,0,0.35);letter-spacing:0.02em;">
-        Confirm & go to Instamart →
+    <!-- Buttons -->
+    <div style="padding:0 20px;display:flex;flex-direction:column;gap:8px;">
+      <button onclick="confirmOrder()" style="width:100%;padding:15px;background:linear-gradient(135deg,#FF5C00,#FF8C42);color:white;font-size:14px;font-weight:700;border:none;border-radius:14px;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 6px 20px rgba(255,92,0,0.35);">
+        Confirm &amp; go to Instamart →
       </button>
       <button onclick="closeModal()" style="width:100%;padding:13px;background:transparent;color:rgba(245,240,232,0.45);font-size:13px;border:0.5px solid rgba(255,255,255,0.08);border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;">
         Cancel
@@ -816,17 +823,17 @@ function updateModal(){
   document.getElementById('modal-items').innerHTML=modalItems.map((ing,i)=>{
     const isCount=countU.includes((ing.unit||'').toLowerCase());
     const qStr=(ing.unit==='pinch'||ing.unit==='to taste')?ing.unit:isCount?(ing.modalQty+' pcs'):(ing.scaledQty>=10?Math.round(ing.scaledQty):Math.round(ing.scaledQty*2)/2)+' '+ing.unit;
-    return`<div class="modal-item">
+    return`<div style="display:flex;align-items:center;padding:9px 12px;background:#1a1a1a;border-radius:10px;gap:8px;border:0.5px solid rgba(255,255,255,0.07);">
       <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${ing.name}</div>
-        ${ing.brand&&ing.brand!=='Fresh'?`<div style="font-size:10px;color:var(--muted);margin-top:1px;">${ing.brand}</div>`:''}
+        <div style="font-size:13px;color:#F5F0E8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${ing.name}</div>
+        ${ing.brand&&ing.brand!=='Fresh'?`<div style="font-size:10px;color:rgba(245,240,232,0.45);margin-top:1px;">${ing.brand}</div>`:''}
       </div>
-      <div class="modal-qty-ctrl">
-        <button class="modal-qty-btn" onclick="chMQ(${i},-1)">−</button>
-        <div class="modal-qty-val">${ing.modalQty||1}</div>
-        <button class="modal-qty-btn" onclick="chMQ(${i},1)">+</button>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+        <button onclick="chMQ(${i},-1)" style="width:24px;height:24px;border-radius:50%;background:#222;border:0.5px solid rgba(255,255,255,0.1);color:#F5F0E8;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">−</button>
+        <div style="font-size:12px;font-weight:600;color:#F5F0E8;min-width:24px;text-align:center;">${ing.modalQty||1}</div>
+        <button onclick="chMQ(${i},1)" style="width:24px;height:24px;border-radius:50%;background:#222;border:0.5px solid rgba(255,255,255,0.1);color:#F5F0E8;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">+</button>
       </div>
-      <div class="modal-item-price">&#8377;${ep(ing)*(ing.modalQty||1)}</div>
+      <div style="font-size:12px;font-weight:600;color:#E8B84B;min-width:38px;text-align:right;flex-shrink:0;">&#8377;${ep(ing)*(ing.modalQty||1)}</div>
     </div>`;
   }).join('');
 }
