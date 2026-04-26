@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Recipe Reel — Cook what you scroll</title>
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#FF5C00">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Recipe Reel">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta property="og:title" content="Recipe Reel — Cook what you scroll">
+<meta property="og:description" content="Paste any food reel. Get every ingredient delivered in 10 mins via Instamart.">
+<meta property="og:image" content="/icon-512.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -500,15 +512,99 @@ async function fetchReel(url){
 
 function getIngredients(title){
   const t=(title||'').toLowerCase();
-  if(t.includes('biryani'))return[{name:'Chicken (curry cut)',qty:400,unit:'g'},{name:'Basmati rice (aged)',qty:200,unit:'g'},{name:'Full-fat yogurt',qty:150,unit:'g'},{name:'Onion',qty:2,unit:'pcs'},{name:'Biryani masala',qty:2,unit:'tbsp'},{name:'Ginger garlic paste',qty:1,unit:'tbsp'},{name:'Ghee',qty:2,unit:'tbsp'},{name:'Mint leaves',qty:10,unit:'g'},{name:'Saffron',qty:1,unit:'pinch'},{name:'Fried onions (birista)',qty:30,unit:'g'}];
-  if(t.includes('shakshuka'))return[{name:'Eggs',qty:4,unit:'pcs'},{name:'Crushed tomatoes',qty:400,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},{name:'Red bell pepper',qty:1,unit:'pcs'},{name:'Olive oil',qty:2,unit:'tbsp'},{name:'Garlic',qty:2,unit:'pcs'},{name:'Cumin',qty:1,unit:'tsp'},{name:'Paprika',qty:1,unit:'tsp'},{name:'Feta cheese',qty:50,unit:'g'}];
-  if(t.includes('pasta')||t.includes('pesto'))return[{name:'Pasta (penne)',qty:200,unit:'g'},{name:'Fresh basil',qty:20,unit:'g'},{name:'Parmesan',qty:60,unit:'g'},{name:'Pine nuts',qty:30,unit:'g'},{name:'Garlic',qty:2,unit:'pcs'},{name:'Olive oil',qty:4,unit:'tbsp'},{name:'Cherry tomatoes',qty:100,unit:'g'}];
-  if(t.includes('pancake'))return[{name:'All-purpose flour',qty:150,unit:'g'},{name:'Eggs',qty:2,unit:'pcs'},{name:'Milk',qty:200,unit:'ml'},{name:'Butter',qty:30,unit:'g'},{name:'Baking powder',qty:1,unit:'tsp'},{name:'Sugar',qty:1,unit:'tbsp'}];
-  if(t.includes('dal')||t.includes('lentil'))return[{name:'Red lentils (masoor)',qty:150,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},{name:'Tomato',qty:2,unit:'pcs'},{name:'Garlic',qty:3,unit:'pcs'},{name:'Cumin seeds',qty:1,unit:'tsp'},{name:'Turmeric',qty:0.5,unit:'tsp'},{name:'Ghee',qty:1,unit:'tbsp'}];
-  if(t.includes('chinese')||t.includes('noodle')||t.includes('manchurian'))return[{name:'Hakka noodles',qty:200,unit:'g'},{name:'Cabbage',qty:100,unit:'g'},{name:'Spring onion',qty:3,unit:'pcs'},{name:'Soy sauce',qty:3,unit:'tbsp'},{name:'Vinegar',qty:1,unit:'tbsp'},{name:'Green chilli sauce',qty:1,unit:'tbsp'},{name:'Garlic',qty:3,unit:'pcs'},{name:'Sesame oil',qty:1,unit:'tbsp'}];
-  if(t.includes('maggi'))return[{name:'Maggi noodles',qty:2,unit:'pcs'},{name:'Processed cheese',qty:50,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},{name:'Tomato',qty:1,unit:'pcs'},{name:'Butter',qty:1,unit:'tbsp'},{name:'Mixed vegetables',qty:100,unit:'g'}];
-  if(t.includes('egg')||t.includes('omelette'))return[{name:'Eggs',qty:3,unit:'pcs'},{name:'Onion',qty:1,unit:'pcs'},{name:'Tomato',qty:1,unit:'pcs'},{name:'Green chilli',qty:1,unit:'pcs'},{name:'Butter',qty:1,unit:'tbsp'},{name:'Salt + pepper',qty:1,unit:'to taste'}];
-  return[{name:'Main protein',qty:300,unit:'g'},{name:'Onion',qty:1,unit:'pcs'},{name:'Garlic',qty:3,unit:'pcs'},{name:'Tomatoes',qty:2,unit:'pcs'},{name:'Oil',qty:2,unit:'tbsp'},{name:'Salt + spices',qty:1,unit:'to taste'}];
+  if(t.includes('biryani'))return[
+    {name:'Fresho Chicken Curry Cut',brand:'Fresho',qty:400,unit:'g',price:220},
+    {name:'India Gate Basmati Rice',brand:'India Gate',qty:200,unit:'g',price:48},
+    {name:'Epigamia Greek Yogurt',brand:'Epigamia',qty:150,unit:'g',price:55},
+    {name:'Onion',brand:'Fresh',qty:2,unit:'pcs',price:24},
+    {name:"Shan Biryani Masala",brand:'Shan',qty:1,unit:'pack',price:38},
+    {name:'MTR Ginger Garlic Paste',brand:'MTR',qty:1,unit:'tbsp',price:12},
+    {name:'Amul Pure Ghee',brand:'Amul',qty:2,unit:'tbsp',price:22},
+    {name:'Fresh Mint Leaves',brand:'Fresh',qty:10,unit:'g',price:10},
+    {name:'Saffron – Zafrani',brand:'Zafrani',qty:1,unit:'pinch',price:18},
+    {name:'Crispy Fried Onions – Deep',brand:'Deep',qty:30,unit:'g',price:28},
+  ];
+  if(t.includes('shakshuka'))return[
+    {name:'Nandini Farm Fresh Eggs',brand:'Nandini',qty:4,unit:'pcs',price:32},
+    {name:'Del Monte Crushed Tomatoes',brand:'Del Monte',qty:400,unit:'g',price:72},
+    {name:'Onion',brand:'Fresh',qty:1,unit:'pcs',price:12},
+    {name:'Red Bell Pepper',brand:'Fresh',qty:1,unit:'pcs',price:35},
+    {name:'Borges Olive Oil',brand:'Borges',qty:2,unit:'tbsp',price:28},
+    {name:'Garlic',brand:'Fresh',qty:2,unit:'pcs',price:6},
+    {name:'Everest Cumin Seeds',brand:'Everest',qty:1,unit:'tsp',price:4},
+    {name:'Catch Paprika',brand:'Catch',qty:1,unit:'tsp',price:4},
+    {name:'Violife Feta Cheese',brand:'Violife',qty:50,unit:'g',price:110},
+  ];
+  if(t.includes('pasta')||t.includes('pesto'))return[
+    {name:'Barilla Penne Rigate',brand:'Barilla',qty:200,unit:'g',price:95},
+    {name:'Fresh Basil Leaves',brand:'Fresh',qty:20,unit:'g',price:25},
+    {name:'Amul Parmesan Cheese',brand:'Amul',qty:60,unit:'g',price:120},
+    {name:'Happilo Pine Nuts',brand:'Happilo',qty:30,unit:'g',price:85},
+    {name:'Garlic',brand:'Fresh',qty:2,unit:'pcs',price:6},
+    {name:'Borges Extra Virgin Olive Oil',brand:'Borges',qty:4,unit:'tbsp',price:40},
+    {name:'Cherry Tomatoes',brand:'Fresh',qty:100,unit:'g',price:45},
+  ];
+  if(t.includes('pancake'))return[
+    {name:'Pillsbury Maida',brand:'Pillsbury',qty:150,unit:'g',price:22},
+    {name:'Nandini Farm Fresh Eggs',brand:'Nandini',qty:2,unit:'pcs',price:16},
+    {name:'Amul Gold Milk',brand:'Amul',qty:200,unit:'ml',price:22},
+    {name:'Amul Butter',brand:'Amul',qty:30,unit:'g',price:18},
+    {name:'Weikfield Baking Powder',brand:'Weikfield',qty:1,unit:'tsp',price:5},
+    {name:'Uttam Sugar',brand:'Uttam',qty:1,unit:'tbsp',price:3},
+  ];
+  if(t.includes('dal')||t.includes('lentil'))return[
+    {name:'Tata Sampann Masoor Dal',brand:'Tata Sampann',qty:150,unit:'g',price:28},
+    {name:'Onion',brand:'Fresh',qty:1,unit:'pcs',price:12},
+    {name:'Tomato',brand:'Fresh',qty:2,unit:'pcs',price:20},
+    {name:'Garlic',brand:'Fresh',qty:3,unit:'pcs',price:9},
+    {name:'Everest Cumin Seeds',brand:'Everest',qty:1,unit:'tsp',price:4},
+    {name:'MDH Turmeric Powder',brand:'MDH',qty:0.5,unit:'tsp',price:2},
+    {name:'Amul Pure Ghee',brand:'Amul',qty:1,unit:'tbsp',price:11},
+  ];
+  if(t.includes('chinese')||t.includes('noodle')||t.includes('manchurian')||t.includes('chowmein'))return[
+    {name:"Ching's Hakka Noodles",brand:"Ching's",qty:200,unit:'g',price:55},
+    {name:'Cabbage',brand:'Fresh',qty:100,unit:'g',price:15},
+    {name:'Spring Onion',brand:'Fresh',qty:3,unit:'pcs',price:18},
+    {name:"Ching's Soy Sauce",brand:"Ching's",qty:3,unit:'tbsp',price:12},
+    {name:"Ching's Vinegar",brand:"Ching's",qty:1,unit:'tbsp',price:8},
+    {name:"Ching's Green Chilli Sauce",brand:"Ching's",qty:1,unit:'tbsp',price:10},
+    {name:'Garlic',brand:'Fresh',qty:3,unit:'pcs',price:9},
+    {name:'Borges Sesame Oil',brand:'Borges',qty:1,unit:'tbsp',price:18},
+  ];
+  if(t.includes('maggi'))return[
+    {name:'Maggi 2-Minute Noodles (4 pack)',brand:'Maggi',qty:2,unit:'packs',price:48},
+    {name:'Amul Processed Cheese',brand:'Amul',qty:50,unit:'g',price:55},
+    {name:'Onion',brand:'Fresh',qty:1,unit:'pcs',price:12},
+    {name:'Tomato',brand:'Fresh',qty:1,unit:'pcs',price:10},
+    {name:'Amul Butter',brand:'Amul',qty:1,unit:'tbsp',price:9},
+    {name:'McCain Mixed Vegetables (Frozen)',brand:'McCain',qty:100,unit:'g',price:35},
+  ];
+  if(t.includes('butter chicken')||t.includes('makhani'))return[
+    {name:'Fresho Chicken Breast',brand:'Fresho',qty:400,unit:'g',price:210},
+    {name:'Amul Butter',brand:'Amul',qty:3,unit:'tbsp',price:27},
+    {name:'Amul Fresh Cream',brand:'Amul',qty:100,unit:'ml',price:35},
+    {name:'MDH Butter Chicken Masala',brand:'MDH',qty:2,unit:'tbsp',price:14},
+    {name:'Onion',brand:'Fresh',qty:2,unit:'pcs',price:24},
+    {name:'Tomato',brand:'Fresh',qty:3,unit:'pcs',price:30},
+    {name:'MTR Ginger Garlic Paste',brand:'MTR',qty:1,unit:'tbsp',price:12},
+    {name:'Everest Kashmiri Chilli Powder',brand:'Everest',qty:1,unit:'tsp',price:4},
+  ];
+  if(t.includes('egg')||t.includes('omelette'))return[
+    {name:'Nandini Farm Fresh Eggs',brand:'Nandini',qty:3,unit:'pcs',price:24},
+    {name:'Onion',brand:'Fresh',qty:1,unit:'pcs',price:12},
+    {name:'Tomato',brand:'Fresh',qty:1,unit:'pcs',price:10},
+    {name:'Green Chilli',brand:'Fresh',qty:1,unit:'pcs',price:3},
+    {name:'Amul Butter',brand:'Amul',qty:1,unit:'tbsp',price:9},
+    {name:'Everest Salt',brand:'Everest',qty:1,unit:'to taste',price:3},
+  ];
+  return[
+    {name:'Onion',brand:'Fresh',qty:2,unit:'pcs',price:24},
+    {name:'Tomato',brand:'Fresh',qty:2,unit:'pcs',price:20},
+    {name:'MTR Ginger Garlic Paste',brand:'MTR',qty:1,unit:'tbsp',price:12},
+    {name:'Everest Garam Masala',brand:'Everest',qty:1,unit:'tsp',price:4},
+    {name:'Saffola Gold Oil',brand:'Saffola',qty:2,unit:'tbsp',price:8},
+    {name:'Everest Salt',brand:'Everest',qty:1,unit:'to taste',price:3},
+  ];
 }
 
 function formatQty(qty,unit,servings){
@@ -541,8 +637,13 @@ function toggleCheck(i){
 }
 
 // PRICING
-const FP={'g':n=>n.includes('chicken')||n.includes('meat')?0.28:n.includes('rice')||n.includes('basmati')?0.12:n.includes('yogurt')?0.08:n.includes('cheese')||n.includes('feta')||n.includes('parmesan')?0.6:n.includes('flour')?0.06:n.includes('lentil')||n.includes('masoor')?0.1:0.15,'pcs':n=>n.includes('egg')?8:n.includes('onion')?12:n.includes('tomato')?10:n.includes('pepper')||n.includes('capsicum')?20:n.includes('garlic')?3:n.includes('lemon')?8:n.includes('maggi')?22:15,'tbsp':()=>4,'tsp':()=>2,'ml':()=>0.08,'pinch':()=>2,'to taste':()=>3};
-function ep(ing){const n=ing.name.toLowerCase();const u=(ing.unit||'').toLowerCase();const fn=FP[u]||(()=>20);return Math.max(5,Math.round(ing.qty*(typeof fn==='function'?fn(n):fn)));}
+function ep(ing){
+  if(ing.price)return ing.price;
+  const n=(ing.name||'').toLowerCase();const u=(ing.unit||'').toLowerCase();
+  const rates={'g':n=>n.includes('chicken')?0.28:n.includes('rice')?0.12:n.includes('yogurt')?0.08:n.includes('cheese')?0.6:n.includes('flour')?0.06:0.15,'pcs':n=>n.includes('egg')?8:n.includes('onion')?12:n.includes('tomato')?10:15,'tbsp':()=>4,'tsp':()=>2,'ml':()=>0.08,'pinch':()=>2,'to taste':()=>3,'pack':()=>40,'packs':()=>40};
+  const fn=rates[u]||(()=>20);
+  return Math.max(5,Math.round(ing.qty*(typeof fn==='function'?fn(n):fn)));
+}
 
 function addToCart(overrideItems){
   const items=overrideItems||currentIngredients;
@@ -561,13 +662,16 @@ function updateModal(){
     const isCount=countU.includes((ing.unit||'').toLowerCase());
     const qStr=(ing.unit==='pinch'||ing.unit==='to taste')?ing.unit:isCount?(ing.modalQty+' pcs'):(ing.scaledQty>=10?Math.round(ing.scaledQty):Math.round(ing.scaledQty*2)/2)+' '+ing.unit;
     return`<div class="modal-item">
-      <div class="modal-item-name">${ing.name}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${ing.name}</div>
+        ${ing.brand&&ing.brand!=='Fresh'?`<div style="font-size:10px;color:var(--muted);margin-top:1px;">${ing.brand}</div>`:''}
+      </div>
       <div class="modal-qty-ctrl">
         <button class="modal-qty-btn" onclick="chMQ(${i},-1)">−</button>
         <div class="modal-qty-val">${ing.modalQty||1}</div>
         <button class="modal-qty-btn" onclick="chMQ(${i},1)">+</button>
       </div>
-      <div class="modal-item-price">₹${ing.price*(ing.modalQty||1)}</div>
+      <div class="modal-item-price">&#8377;${ep(ing)*(ing.modalQty||1)}</div>
     </div>`;
   }).join('');
 }
@@ -801,6 +905,65 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ── PWA SERVICE WORKER ──
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('SW registered'))
+      .catch(e => console.log('SW failed:', e));
+  });
+}
+
+// ── SHARE TARGET HANDLER ──
+// When user shares a YouTube link to this app via Android share sheet,
+// the URL lands as a query param: /?url=... or /?text=...
+window.addEventListener('load', () => {
+  const params = new URLSearchParams(window.location.search);
+  const sharedUrl = params.get('url') || params.get('text') || params.get('title');
+  if(sharedUrl && (sharedUrl.includes('youtube.com') || sharedUrl.includes('youtu.be') || sharedUrl.includes('instagram.com'))) {
+    // Auto-populate and trigger fetch
+    document.getElementById('url-input').value = sharedUrl;
+    // Small delay to let page render first
+    setTimeout(() => fetchReel(sharedUrl), 600);
+    // Show a toast so user knows the share was received
+    setTimeout(() => showToast('Reel received — extracting ingredients...'), 200);
+  }
+});
+
+// ── PWA INSTALL PROMPT ──
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Show install button after 3 seconds if not installed
+  setTimeout(() => {
+    if(deferredPrompt) showInstallBanner();
+  }, 3000);
+});
+
+function showInstallBanner(){
+  const banner = document.createElement('div');
+  banner.id = 'install-banner';
+  banner.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FF5C00,#FF8C42);color:white;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:600;z-index:998;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(255,92,0,0.4);cursor:pointer;white-space:nowrap;';
+  banner.innerHTML = '<span>📲</span><span>Add to home screen for share shortcut</span><span onclick="dismissInstall()" style="opacity:0.7;margin-left:4px;">✕</span>';
+  banner.onclick = (e) => { if(e.target.tagName !== 'SPAN' || !e.target.textContent.includes('✕')) installPWA(); };
+  document.body.appendChild(banner);
+}
+
+async function installPWA(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  const result = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  dismissInstall();
+  if(result.outcome === 'accepted') showToast('Added to home screen!');
+}
+
+function dismissInstall(){
+  const b = document.getElementById('install-banner');
+  if(b) b.remove();
+}
 </script>
 </body>
 </html>
