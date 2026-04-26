@@ -205,6 +205,31 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.88);backdrop-filte
 .saved-section-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .saved-section-title{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
 .saved-list{display:flex;flex-direction:column;gap:8px;}
+.collapse-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);border:0.5px solid var(--border);border-radius:14px;cursor:pointer;transition:border-color 0.2s;box-shadow:0 4px 16px rgba(0,0,0,0.3);}
+.collapse-header:hover{border-color:rgba(255,92,0,0.2);}
+.collapse-chevron{font-size:16px;color:var(--muted);transition:transform 0.25s;}
+.collapse-chevron.open{transform:rotate(180deg);}
+
+/* SMART CART BUTTON */
+.smart-cart-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-size:14px;font-weight:700;border:none;border-radius:14px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:space-between;box-shadow:0 6px 20px rgba(255,92,0,0.35);transition:all 0.2s;}
+.smart-cart-btn:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(255,92,0,0.45);}
+.smart-cart-meta{font-size:11px;opacity:0.8;margin-top:2px;}
+
+/* CLUSTER CARDS */
+.cluster-card{border-radius:16px;overflow:hidden;margin-bottom:12px;border:0.5px solid rgba(255,255,255,0.07);box-shadow:0 6px 24px rgba(0,0,0,0.4);}
+.cluster-head{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;}
+.cluster-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 3px 10px rgba(0,0,0,0.3);}
+.cluster-title{font-size:14px;font-weight:700;margin-bottom:2px;}
+.cluster-sub{font-size:11px;color:var(--muted);}
+.cluster-chip{font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+.cluster-items{padding:0 16px 4px;display:flex;flex-wrap:wrap;gap:5px;}
+.cluster-item{font-size:11px;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;}
+.cluster-item-brand{font-size:9px;opacity:0.65;}
+.cluster-recipes-used{padding:4px 16px 8px;font-size:11px;color:var(--muted);}
+.cluster-order-row{padding:8px 16px 14px;}
+.cluster-order-btn{width:100%;padding:11px;font-size:12px;font-weight:600;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;border:none;}
+
+.saved-card{
 .saved-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color 0.2s;box-shadow:0 4px 16px rgba(0,0,0,0.3);}
 .saved-card:hover{border-color:rgba(255,92,0,0.2);}
 .saved-card-head{display:flex;gap:12px;padding:12px 14px;border-bottom:0.5px solid var(--border);align-items:center;}
@@ -269,7 +294,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.88);backdrop-filte
 
 <nav>
   <div class="nav-logo"><div class="logo-flame">🔥</div>Recipe Reel</div>
-  <div class="nav-pill">SWIGGY BUILDERS</div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <button id="install-btn" onclick="installPWA()" style="display:none;background:linear-gradient(135deg,#FF5C00,#FF8C42);color:white;border:none;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">📲 Install</button>
+    <div class="nav-pill">SWIGGY BUILDERS</div>
+  </div>
 </nav>
 
 <!-- ══ SCAN TAB ══ -->
@@ -380,30 +408,49 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.88);backdrop-filte
 <div class="tab-content" id="tab-wishlist">
   <div class="wl-hero">
     <div class="wl-hero-title">My Wishlist</div>
-    <div class="wl-hero-sub">Smart-grouped ingredients · order smarter, waste less</div>
+    <div class="wl-hero-sub">Smart ingredient clusters · order smarter, waste less</div>
   </div>
 
+  <!-- URL save bar -->
   <div class="wl-url-bar">
     <div style="font-size:15px;">🔗</div>
-    <input class="wl-url-input" id="wl-url-input" type="url" placeholder="Paste YouTube link to save directly..."/>
+    <input class="wl-url-input" id="wl-url-input" type="url" placeholder="Paste YouTube link to save..."/>
     <button class="wl-save-btn" id="wl-save-btn" onclick="saveFromUrl()">Save</button>
   </div>
 
+  <!-- Empty state -->
   <div id="wl-empty" class="wl-empty">
     <div class="wl-empty-icon">🍳</div>
     <div class="wl-empty-text">No saved recipes yet</div>
-    <div class="wl-empty-sub">Paste a link above or tap Save on any reel</div>
+    <div class="wl-empty-sub">Share a YouTube Short to this app, or paste a link above</div>
   </div>
 
+  <!-- Main content -->
   <div id="wl-content" style="display:none;">
-    <div class="cat-section" id="cat-section"></div>
-    <div class="saved-section" id="saved-section">
-      <div class="saved-section-header">
-        <div class="saved-section-title">All saved</div>
-        <div style="flex:1;height:0.5px;background:var(--border);"></div>
+
+    <!-- SMART CART — top CTA -->
+    <div id="smart-cart-section" style="padding:0 20px 16px;"></div>
+
+    <!-- INGREDIENT CLUSTERS -->
+    <div id="cluster-section" style="padding:0 20px;"></div>
+
+    <!-- SAVED REELS — collapsible -->
+    <div style="padding:0 20px;margin-top:8px;">
+      <div class="collapse-header" onclick="toggleSaved()" id="saved-toggle">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="font-size:18px;">📱</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;">Saved Reels</div>
+            <div style="font-size:11px;color:var(--muted);" id="saved-count-label">0 reels saved</div>
+          </div>
+        </div>
+        <div class="collapse-chevron" id="saved-chevron">▾</div>
       </div>
-      <div class="saved-list" id="wl-items"></div>
+      <div id="saved-list-wrap" style="display:none;margin-top:8px;">
+        <div class="saved-list" id="wl-items"></div>
+      </div>
     </div>
+    <div style="height:16px;"></div>
   </div>
 </div>
 
@@ -722,13 +769,24 @@ async function saveFromUrl(){
   btn.textContent='Save';btn.disabled=false;
 }
 
+function toggleSaved(){
+  const wrap = document.getElementById('saved-list-wrap');
+  const chev = document.getElementById('saved-chevron');
+  const isOpen = wrap.style.display !== 'none';
+  wrap.style.display = isOpen ? 'none' : 'block';
+  chev.classList.toggle('open', !isOpen);
+}
+
 function renderWishlist(){
-  const has=wishlist.length>0;
-  document.getElementById('wl-empty').style.display=has?'none':'block';
-  document.getElementById('wl-content').style.display=has?'block':'none';
-  if(!has)return;
-  renderSmartCategories();
-  document.getElementById('wl-items').innerHTML=wishlist.map((w,i)=>`
+  const has = wishlist.length > 0;
+  document.getElementById('wl-empty').style.display = has ? 'none' : 'block';
+  document.getElementById('wl-content').style.display = has ? 'block' : 'none';
+  if(!has) return;
+
+  document.getElementById('saved-count-label').textContent = wishlist.length + ' reel' + (wishlist.length > 1 ? 's' : '') + ' saved';
+
+  // Saved cards
+  document.getElementById('wl-items').innerHTML = wishlist.map((w,i) => `
     <div class="saved-card">
       <div class="saved-card-head">
         <img class="saved-thumb" src="${w.thumbUrl}" alt="" onerror="this.style.background='#1a1a1a'">
@@ -736,150 +794,203 @@ function renderWishlist(){
           <div class="saved-title">${w.title}</div>
           <div class="saved-meta">${w.author} · ${w.ingredients.length} ingredients</div>
         </div>
+        <a href="${w.ytUrl||'https://youtube.com'}" target="_blank" style="flex-shrink:0;background:rgba(255,255,255,0.06);border:0.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:11px;color:var(--muted);text-decoration:none;">▶ Watch</a>
       </div>
       <div class="saved-actions">
         <button class="saved-order-btn" onclick="orderWishlist(${i})">🛒 Order ingredients</button>
         <button class="saved-remove-btn" onclick="removeWishlist(${i})">Remove</button>
       </div>
     </div>`).join('');
+
+  renderClusters();
 }
 
-// CATEGORY CONFIG
-const FOOD_GROUPS={
-  '🥚 Egg dishes':['egg','eggs','shakshuka','omelette','frittata','scrambled','benedict'],
-  '🍛 Biryani & rice':['biryani','pulao','fried rice','khichdi','tehri'],
-  '🍝 Pasta & noodles':['pasta','noodle','spaghetti','penne','pesto','ramen','hakka'],
-  '🍗 Chicken dishes':['chicken','murgh','butter chicken','tikka'],
-  '🥞 Breakfast':['pancake','waffle','toast','french toast','banana bread','muffin'],
-  '🍜 Chinese':['chinese','manchurian','chowmein','chilli','schezwan','indo chinese'],
-  '🍜 Maggi & instant':['maggi','instant','cup noodle']
-};
-
-function classifyRecipe(title){
-  const t=(title||'').toLowerCase();
-  for(const[group,keywords]of Object.entries(FOOD_GROUPS)){
-    if(keywords.some(k=>t.includes(k)))return group;
+// ── INGREDIENT CLUSTER ENGINE ──
+const CLUSTERS = [
+  {
+    id: 'pantry',
+    name: 'Pantry Staples',
+    icon: '🧂',
+    color: '#E8B84B',
+    bg: 'linear-gradient(135deg,#1a1500,#252000)',
+    chipBg: 'rgba(232,184,75,0.15)',
+    chipColor: '#E8B84B',
+    keywords: ['onion','garlic','ginger','salt','oil','saffola','turmeric','cumin','garam masala','everest','mdh','catch','pepper','chilli powder','coriander','spice','masala']
+  },
+  {
+    id: 'protein',
+    name: 'Your Protein',
+    icon: '🍗',
+    color: '#FF8C42',
+    bg: 'linear-gradient(135deg,#1a0800,#2a1200)',
+    chipBg: 'rgba(255,140,66,0.15)',
+    chipColor: '#FF8C42',
+    keywords: ['chicken','egg','eggs','paneer','fish','meat','fresho','nandini','tofu','lentil','dal','masoor','chana','chickpea']
+  },
+  {
+    id: 'dairy',
+    name: 'Dairy & Cheese',
+    icon: '🧀',
+    color: '#64B5F6',
+    bg: 'linear-gradient(135deg,#060e1a,#0d1828)',
+    chipBg: 'rgba(100,181,246,0.15)',
+    chipColor: '#90CAF9',
+    keywords: ['amul','milk','butter','cream','cheese','yogurt','ghee','feta','parmesan','paneer','epigamia','violife','dairy']
+  },
+  {
+    id: 'sauces',
+    name: 'Sauces & Oils',
+    icon: '🫙',
+    color: '#EF5350',
+    bg: 'linear-gradient(135deg,#1a0305,#250508)',
+    chipBg: 'rgba(239,83,80,0.15)',
+    chipColor: '#EF9A9A',
+    keywords: ["ching's",'soy sauce','vinegar','olive oil','borges','chilli sauce','schezwan','del monte','mtr','ginger garlic paste','sesame oil','tomato puree']
+  },
+  {
+    id: 'grains',
+    name: 'Grains & Pasta',
+    icon: '🌾',
+    color: '#66BB6A',
+    bg: 'linear-gradient(135deg,#051205,#091a09)',
+    chipBg: 'rgba(102,187,106,0.15)',
+    chipColor: '#66BB6A',
+    keywords: ['rice','basmati','india gate','pasta','barilla','noodle','flour','pillsbury','maggi','bread','roti','maida','hakka']
+  },
+  {
+    id: 'fresh',
+    name: 'Fresh Produce',
+    icon: '🥬',
+    color: '#4CAF50',
+    bg: 'linear-gradient(135deg,#041004,#061806)',
+    chipBg: 'rgba(76,175,80,0.15)',
+    chipColor: '#81C784',
+    keywords: ['tomato','bell pepper','capsicum','cabbage','spinach','spring onion','mint','basil','coriander','lemon','lime','green chilli','cherry tomato','fresh']
   }
-  return '🍽️ Other dishes';
+];
+
+function getClusterForIngredient(ingName) {
+  const n = ingName.toLowerCase();
+  for(const cluster of CLUSTERS) {
+    if(cluster.keywords.some(k => n.includes(k))) return cluster.id;
+  }
+  return null;
 }
 
-function renderSmartCategories(){
-  const grouped={};
-  for(const w of wishlist){
-    const cat=classifyRecipe(w.title);
-    if(!grouped[cat])grouped[cat]={recipes:[],allIng:[]};
-    grouped[cat].recipes.push(w);
-    grouped[cat].allIng.push(...w.ingredients);
-  }
-  const multiGroups=Object.entries(grouped).filter(([,g])=>g.recipes.length>=2);
-  const sec=document.getElementById('cat-section');
-  if(!multiGroups.length){sec.innerHTML='';return;}
-
-  // Color themes per category type
-  const themes={
-    'egg':{bg:'linear-gradient(135deg,#1a1a00,#2a2000)',accent:'#E8B84B',chip:'rgba(232,184,75,0.15)',chipText:'#E8B84B'},
-    'biryani':{bg:'linear-gradient(135deg,#1a0800,#2a1000)',accent:'#FF5C00',chip:'rgba(255,92,0,0.15)',chipText:'#FF8C42'},
-    'pasta':{bg:'linear-gradient(135deg,#0a1a00,#102800)',accent:'#4CAF50',chip:'rgba(76,175,80,0.15)',chipText:'#66BB6A'},
-    'chicken':{bg:'linear-gradient(135deg,#1a0a00,#2a1200)',accent:'#FF8C42',chip:'rgba(255,140,66,0.15)',chipText:'#FFA563'},
-    'breakfast':{bg:'linear-gradient(135deg,#0a1020,#101828)',accent:'#64B5F6',chip:'rgba(100,181,246,0.15)',chipText:'#90CAF9'},
-    'chinese':{bg:'linear-gradient(135deg,#1a0005,#2a000a)',accent:'#EF5350',chip:'rgba(239,83,80,0.15)',chipText:'#EF9A9A'},
-    'default':{bg:'linear-gradient(135deg,#0d0d0d,#1a1a1a)',accent:'var(--accent)',chip:'rgba(255,92,0,0.15)',chipText:'var(--accent2)'}
-  };
-
-  function getTheme(cat){
-    const c=cat.toLowerCase();
-    if(c.includes('egg'))return themes.egg;
-    if(c.includes('biryani')||c.includes('rice'))return themes.biryani;
-    if(c.includes('pasta')||c.includes('noodle'))return themes.pasta;
-    if(c.includes('chicken'))return themes.chicken;
-    if(c.includes('breakfast'))return themes.breakfast;
-    if(c.includes('chinese')||c.includes('maggi'))return themes.chinese;
-    return themes.default;
+function renderClusters() {
+  if(wishlist.length < 2) {
+    document.getElementById('cluster-section').innerHTML = '';
+    document.getElementById('smart-cart-section').innerHTML = '';
+    return;
   }
 
-  let html=`<div class="cat-section-header"><div class="cat-section-title">Smart grouping</div><div class="cat-section-line"></div></div>`;
+  // Collect all ingredients across all saved recipes
+  const allIng = wishlist.flatMap(w => w.ingredients);
 
-  for(const[cat,group]of multiGroups){
-    const th=getTheme(cat);
-    const nameCount={};
-    group.allIng.forEach(i=>{nameCount[i.name]=(nameCount[i.name]||0)+1;});
-    const unique=[...new Set(group.allIng.map(i=>i.name))];
-    const shared=Object.keys(nameCount).filter(n=>nameCount[n]>1);
-    const saved=group.allIng.length-unique.length;
-    const totalVal=unique.reduce((s,n)=>{const ing=group.allIng.find(i=>i.name===n);return s+(ing?ep(ing):0);},0);
-    const icon=cat.split(' ')[0];
-    const name=cat.split(' ').slice(1).join(' ');
+  // Count ingredient frequency
+  const freq = {};
+  allIng.forEach(ing => {
+    const key = ing.name;
+    if(!freq[key]) freq[key] = {ing, count:0, recipes:[]};
+    freq[key].count++;
+    const recipeTitle = wishlist.find(w => w.ingredients.some(i => i.name === key))?.title || '';
+    if(recipeTitle && !freq[key].recipes.includes(recipeTitle)) freq[key].recipes.push(recipeTitle);
+  });
 
-    html+=`<div class="cat-card" style="background:${th.bg};">
-      <div class="cat-card-inner">
-        <div class="cat-card-head">
-          <div class="cat-left">
-            <div class="cat-icon-circle" style="background:${th.chip};">${icon}</div>
-            <div class="cat-head-text">
-              <div class="cat-name">${name}</div>
-              <div class="cat-sub">${unique.length} unique ingredients · ${group.recipes.length} recipes</div>
-            </div>
+  // Only keep ingredients that appear in 2+ recipes (the real repeats)
+  const repeated = Object.values(freq).filter(f => f.count >= 2);
+
+  // Group repeated ingredients into clusters
+  const clusterMap = {};
+  repeated.forEach(f => {
+    const clusterId = getClusterForIngredient(f.ing.name);
+    if(!clusterId) return;
+    if(!clusterMap[clusterId]) clusterMap[clusterId] = [];
+    clusterMap[clusterId].push(f);
+  });
+
+  // Also deduplicate ALL ingredients for smart cart
+  const seen = new Set(), deduped = [];
+  allIng.forEach(i => { if(!seen.has(i.name)){seen.add(i.name);deduped.push(i);} });
+  const totalSaved = allIng.length - deduped.length;
+  const totalVal = deduped.reduce((s,i) => s + ep(i), 0);
+
+  // SMART CART
+  document.getElementById('smart-cart-section').innerHTML = `
+    <button class="smart-cart-btn" onclick="orderAll()">
+      <div>
+        <div>🛒 Order everything — smart cart</div>
+        <div class="smart-cart-meta">${deduped.length} unique items · ${totalSaved} duplicates removed · ₹${totalVal} est.</div>
+      </div>
+      <div style="font-size:18px;flex-shrink:0;">→</div>
+    </button>`;
+
+  // CLUSTER CARDS — only show clusters that have 2+ repeated items
+  const activeClusters = CLUSTERS.filter(c => clusterMap[c.id] && clusterMap[c.id].length >= 1);
+
+  if(!activeClusters.length) {
+    document.getElementById('cluster-section').innerHTML = `
+      <div style="font-size:12px;color:var(--muted);text-align:center;padding:12px 0 4px;">Save more reels to see ingredient clusters appear</div>`;
+    return;
+  }
+
+  let html = `<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap;">Ingredient clusters</div>
+    <div style="flex:1;height:0.5px;background:var(--border);"></div>
+    <div style="font-size:10px;color:var(--muted);">repeated across your reels</div>
+  </div>`;
+
+  for(const cluster of activeClusters) {
+    const items = clusterMap[cluster.id];
+    const clusterTotal = items.reduce((s,f) => s + ep(f.ing), 0);
+    const allRecipes = [...new Set(items.flatMap(f => f.recipes))];
+
+    html += `<div class="cluster-card" style="background:${cluster.bg};">
+      <div class="cluster-head">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="cluster-icon" style="background:${cluster.chipBg};">${cluster.icon}</div>
+          <div>
+            <div class="cluster-title">${cluster.name}</div>
+            <div class="cluster-sub">${items.length} repeated item${items.length>1?'s':''} · used across ${allRecipes.length} recipes</div>
           </div>
-          ${saved>0?`<div class="cat-save-chip" style="background:${th.chip};color:${th.chipText};">-${saved} items</div>`:''}
         </div>
-        <div class="cat-recipes">
-          ${group.recipes.map(r=>`
-            <div class="cat-recipe-row">
-              <div class="cat-recipe-name">${r.title}</div>
-              <div class="cat-recipe-count">${r.ingredients.length} items</div>
-            </div>`).join('')}
-        </div>
-        <div class="shared-pills">
-          ${shared.slice(0,5).map(n=>`<span class="shared-pill shared">✓ ${n}</span>`).join('')}
-          ${unique.filter(n=>!shared.includes(n)).slice(0,3).map(n=>`<span class="shared-pill normal">${n}</span>`).join('')}
-          ${unique.length>8?`<span class="shared-pill normal" style="color:${th.chipText}">+${unique.length-8} more</span>`:''}
-        </div>
-        <div class="cat-order-area">
-          <button class="cat-order-btn" style="background:${th.chip};color:${th.chipText};" onclick="orderGroup('${cat}')">
-            🛒 Order all ${unique.length} deduplicated items
-          </button>
-          <div class="cat-est">Estimated total ₹${totalVal} · saves ₹${Math.round(totalVal*0.15)} vs ordering separately</div>
-        </div>
+        <div class="cluster-chip" style="background:${cluster.chipBg};color:${cluster.chipColor};">x${items.reduce((s,f)=>s+f.count,0)} uses</div>
+      </div>
+      <div class="cluster-items">
+        ${items.map(f => `
+          <div class="cluster-item" style="background:${cluster.chipBg};color:${cluster.chipColor};">
+            <span>${f.ing.name.split('–')[0].split('-')[0].trim()}</span>
+            ${f.ing.brand&&f.ing.brand!=='Fresh'?`<span class="cluster-item-brand">${f.ing.brand}</span>`:''}
+          </div>`).join('')}
+      </div>
+      <div class="cluster-recipes-used">Used in: ${allRecipes.slice(0,3).map(r=>r.split(' ').slice(0,3).join(' ')).join(', ')}${allRecipes.length>3?'...':''}</div>
+      <div class="cluster-order-row">
+        <button class="cluster-order-btn" style="background:${cluster.chipBg};color:${cluster.chipColor};"
+          onclick="orderCluster('${cluster.id}')">
+          🛒 Order ${cluster.name.toLowerCase()} · ₹${clusterTotal}
+        </button>
       </div>
     </div>`;
   }
 
-  // Master bundle if 3+ recipes
-  if(wishlist.length>=3){
-    const allIng=wishlist.flatMap(w=>w.ingredients);
-    const seen=new Set(),deduped=[];
-    allIng.forEach(i=>{if(!seen.has(i.name)){seen.add(i.name);deduped.push(i);}});
-    const totalVal=deduped.reduce((s,i)=>s+ep(i),0);
-    html+=`<div class="cat-card" style="background:linear-gradient(135deg,#001a0a,#002a10);">
-      <div class="cat-card-inner">
-        <div class="cat-card-head">
-          <div class="cat-left">
-            <div class="cat-icon-circle" style="background:var(--green-bg);">🧠</div>
-            <div class="cat-head-text">
-              <div class="cat-name">Everything, deduplicated</div>
-              <div class="cat-sub">${deduped.length} unique items across all ${wishlist.length} saved recipes</div>
-            </div>
-          </div>
-          <div class="cat-save-chip" style="background:var(--green-bg);color:var(--green);">AI grouped</div>
-        </div>
-        <div class="cat-order-area">
-          <button class="cat-order-btn" style="background:var(--green-bg);color:var(--green);" onclick="orderAll()">
-            🛒 Master cart — all ${deduped.length} items
-          </button>
-          <div class="cat-est" style="color:var(--green);opacity:0.7;">₹${totalVal} total · no duplicates</div>
-        </div>
-      </div>
-    </div>`;
-  }
+  document.getElementById('cluster-section').innerHTML = html;
+}
 
-  sec.innerHTML=html;
+function orderCluster(clusterId){
+  const cluster = CLUSTERS.find(c => c.id === clusterId);
+  if(!cluster) return;
+  const allIng = wishlist.flatMap(w => w.ingredients);
+  const freq = {};
+  allIng.forEach(ing => { if(!freq[ing.name]) freq[ing.name] = ing; });
+  const clusterItems = Object.values(freq).filter(ing => {
+    const n = ing.name.toLowerCase();
+    return cluster.keywords.some(k => n.includes(k));
+  });
+  addToCart(clusterItems);
 }
 
 function orderGroup(cat){
-  const group=wishlist.filter(w=>classifyRecipe(w.title)===cat);
-  const seen=new Set(),deduped=[];
-  group.flatMap(w=>w.ingredients).forEach(i=>{if(!seen.has(i.name)){seen.add(i.name);deduped.push(i);}});
-  addToCart(deduped);
+  orderAll();
 }
 function orderAll(){
   const seen=new Set(),deduped=[];
@@ -933,37 +1044,37 @@ window.addEventListener('load', () => {
 
 // ── PWA INSTALL PROMPT ──
 let deferredPrompt;
+
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  // Show install button after 3 seconds if not installed
-  setTimeout(() => {
-    if(deferredPrompt) showInstallBanner();
-  }, 3000);
+  const btn = document.getElementById('install-btn');
+  if(btn) btn.style.display = 'block';
 });
 
-function showInstallBanner(){
-  const banner = document.createElement('div');
-  banner.id = 'install-banner';
-  banner.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FF5C00,#FF8C42);color:white;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:600;z-index:998;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(255,92,0,0.4);cursor:pointer;white-space:nowrap;';
-  banner.innerHTML = '<span>📲</span><span>Add to home screen for share shortcut</span><span onclick="dismissInstall()" style="opacity:0.7;margin-left:4px;">✕</span>';
-  banner.onclick = (e) => { if(e.target.tagName !== 'SPAN' || !e.target.textContent.includes('✕')) installPWA(); };
-  document.body.appendChild(banner);
-}
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  const btn = document.getElementById('install-btn');
+  if(btn) btn.style.display = 'none';
+  showToast('Recipe Reel installed!');
+});
 
 async function installPWA(){
-  if(!deferredPrompt)return;
-  deferredPrompt.prompt();
-  const result = await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  dismissInstall();
-  if(result.outcome === 'accepted') showToast('Added to home screen!');
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    const result = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    if(result.outcome === 'accepted'){
+      showToast('Installing Recipe Reel...');
+      document.getElementById('install-btn').style.display = 'none';
+    }
+  } else {
+    // Fallback instructions if prompt not available
+    showToast('Tap browser menu → Add to Home Screen');
+  }
 }
 
-function dismissInstall(){
-  const b = document.getElementById('install-banner');
-  if(b) b.remove();
-}
+function dismissInstall(){}
 </script>
 </body>
 </html>
