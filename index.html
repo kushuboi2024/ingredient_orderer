@@ -30,7 +30,7 @@ html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
 
 /* ── GRAIN OVERLAY ── */
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4;}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;opacity:0.4;}
 
 /* ── NAV ── */
 nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.88);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;}
@@ -112,19 +112,19 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.88);backdrop-filte
 .error-sub{font-size:12px;color:var(--muted);line-height:1.5;}
 
 /* ── RESULT PANEL ── */
-.result-panel{margin:14px 20px;border-radius:20px;overflow:hidden;display:none;
+.result-panel{margin:14px 20px;border-radius:20px;display:none;position:relative;z-index:1;
   box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 0 0.5px rgba(255,255,255,0.08);
   background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%);}
 .result-panel.show{display:block;animation:riseIn 0.4s cubic-bezier(0.34,1.56,0.64,1);}
 @keyframes riseIn{from{opacity:0;transform:translateY(16px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.result-hero{position:relative;height:200px;overflow:hidden;}
+.result-hero{position:relative;height:200px;overflow:hidden;border-radius:20px 20px 0 0;}
 .result-hero-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.85);}
 .result-hero-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.1),transparent 40%,rgba(8,8,8,0.95));}
 .result-hero-badge{position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;padding:4px 10px;font-size:10px;font-weight:600;}
 .result-hero-info{position:absolute;bottom:14px;left:16px;right:16px;}
 .result-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,0.8);}
 .result-author{font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px;}
-.result-body{padding:16px;}
+.result-body{padding:16px;background:var(--surface);border-radius:0 0 20px 20px;border:0.5px solid rgba(255,255,255,0.07);border-top:none;}
 
 .section-eyebrow{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
 .section-eyebrow-accent{color:var(--accent);font-size:9px;}
@@ -279,10 +279,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.88);backdrop-filte
 .modal-cancel{width:100%;padding:12px;background:transparent;color:var(--muted);font-size:13px;border:0.5px solid var(--border);border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;}
 
 /* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,8,0.95);backdrop-filter:blur(20px);border-top:0.5px solid var(--border);display:flex;padding:8px 0 14px;z-index:100;}
-.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;transition:opacity 0.2s;}
-.bnav-icon{font-size:20px;}
-.bnav-label{font-size:10px;color:var(--muted);font-weight:500;transition:color 0.2s;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);border-top:0.5px solid var(--border);display:flex;padding:8px 0 14px;z-index:1000;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;padding:4px 0;}
+.bnav-icon{font-size:22px;line-height:1;display:block;text-align:center;}
+.bnav-label{font-size:10px;color:rgba(245,240,232,0.45);font-weight:500;transition:color 0.2s;display:block;text-align:center;margin-top:2px;}
 .bnav-item.active .bnav-label{color:var(--accent);}
 .bnav-item.active .bnav-icon{filter:drop-shadow(0 0 6px rgba(255,92,0,0.6));}
 
@@ -323,37 +323,65 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.88);backdrop-filte
       </div>
       <div class="trending-label">Trending now</div>
       <div class="reels-row">
-        <div class="reel-card" onclick="fillAndFetch('https://www.youtube.com/shorts/QAPb7HbPuF4')">
-          <img class="reel-img" src="https://img.youtube.com/vi/QAPb7HbPuF4/mqdefault.jpg" alt="Biryani" onerror="this.style.display='none'">
-          <div class="reel-shimmer" style="display:none;">🍛</div>
+        <div class="reel-card" onclick="fillAndFetch('https://youtube.com/shorts/Z_IbTzJ4rWU')">
+          <img class="reel-img" src="https://img.youtube.com/vi/Z_IbTzJ4rWU/mqdefault.jpg" alt="Butter Chicken">
           <div class="reel-vignette"></div>
           <div class="reel-play"><div class="play-tri"></div></div>
-          <a class="reel-yt-link" href="https://www.youtube.com/shorts/QAPb7HbPuF4" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+          <a class="reel-yt-link" href="https://youtube.com/shorts/Z_IbTzJ4rWU" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
           <div class="reel-hot">🔥 HOT</div>
-          <div class="reel-info"><div class="reel-name">Chicken Biryani</div><div class="reel-views">YouTube Shorts</div></div>
+          <div class="reel-info"><div class="reel-name">Butter Chicken</div><div class="reel-views">Restaurant Style</div></div>
         </div>
-        <div class="reel-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=tnvz3uA0vMY')">
-          <img class="reel-img" src="https://img.youtube.com/vi/tnvz3uA0vMY/mqdefault.jpg" alt="Shakshuka">
+        <div class="reel-card" onclick="fillAndFetch('https://youtube.com/shorts/I6Cw_w3Jckw')">
+          <img class="reel-img" src="https://img.youtube.com/vi/I6Cw_w3Jckw/mqdefault.jpg" alt="Sweet Sour Chicken">
           <div class="reel-vignette"></div>
           <div class="reel-play"><div class="play-tri"></div></div>
-          <a class="reel-yt-link" href="https://www.youtube.com/watch?v=tnvz3uA0vMY" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
-          <div class="reel-info"><div class="reel-name">Perfect Shakshuka</div><div class="reel-views">Tasty · 2.1M views</div></div>
+          <a class="reel-yt-link" href="https://youtube.com/shorts/I6Cw_w3Jckw" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+          <div class="reel-info"><div class="reel-name">Sweet & Sour Chicken</div><div class="reel-views">216 cal · Airfryer</div></div>
         </div>
-        <div class="reel-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=DOjNC_BkZiM')">
-          <img class="reel-img" src="https://img.youtube.com/vi/DOjNC_BkZiM/mqdefault.jpg" alt="Authentic Biryani">
+        <div class="reel-card" onclick="fillAndFetch('https://youtube.com/shorts/RHQlBCLZdfg')">
+          <img class="reel-img" src="https://img.youtube.com/vi/RHQlBCLZdfg/mqdefault.jpg" alt="Soy Sauce Chicken">
           <div class="reel-vignette"></div>
           <div class="reel-play"><div class="play-tri"></div></div>
-          <a class="reel-yt-link" href="https://www.youtube.com/watch?v=DOjNC_BkZiM" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+          <a class="reel-yt-link" href="https://youtube.com/shorts/RHQlBCLZdfg" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
           <div class="reel-hot">👨‍🍳 CHEF</div>
-          <div class="reel-info"><div class="reel-name">Authentic Biryani</div><div class="reel-views">Andy Cooks · 3.4M views</div></div>
+          <div class="reel-info"><div class="reel-name">Soy Sauce Chicken</div><div class="reel-views">20-Minute Recipe</div></div>
         </div>
-        <div class="reel-card" onclick="fillAndFetch('https://www.youtube.com/watch?v=nf57BA3i5Rg')">
-          <img class="reel-img" src="https://img.youtube.com/vi/nf57BA3i5Rg/mqdefault.jpg" alt="Easy Biryani">
+        <div class="reel-card" onclick="fillAndFetch('https://youtube.com/shorts/6_P5Okx66BY')">
+          <img class="reel-img" src="https://img.youtube.com/vi/6_P5Okx66BY/mqdefault.jpg" alt="Recipe">
           <div class="reel-vignette"></div>
           <div class="reel-play"><div class="play-tri"></div></div>
-          <a class="reel-yt-link" href="https://www.youtube.com/watch?v=nf57BA3i5Rg" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
-          <div class="reel-info"><div class="reel-name">Biryani for Beginners</div><div class="reel-views">4.2M views</div></div>
+          <a class="reel-yt-link" href="https://youtube.com/shorts/6_P5Okx66BY" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+          <div class="reel-info"><div class="reel-name">Quick Recipe</div><div class="reel-views">YouTube Shorts</div></div>
         </div>
+        <div class="reel-card" onclick="fillAndFetch('https://youtube.com/shorts/UUep-CTJ_DE')">
+          <img class="reel-img" src="https://img.youtube.com/vi/UUep-CTJ_DE/mqdefault.jpg" alt="Recipe">
+          <div class="reel-vignette"></div>
+          <div class="reel-play"><div class="play-tri"></div></div>
+          <a class="reel-yt-link" href="https://youtube.com/shorts/UUep-CTJ_DE" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+          <div class="reel-info"><div class="reel-name">Food Recipe</div><div class="reel-views">YouTube Shorts</div></div>
+        </div>
+        <div class="reel-card" onclick="fillAndFetch('https://youtube.com/shorts/m-y8autWLkY')">
+          <img class="reel-img" src="https://img.youtube.com/vi/m-y8autWLkY/mqdefault.jpg" alt="Tomato Egg">
+          <div class="reel-vignette"></div>
+          <div class="reel-play"><div class="play-tri"></div></div>
+          <a class="reel-yt-link" href="https://youtube.com/shorts/m-y8autWLkY" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+          <div class="reel-info"><div class="reel-name">Tomato Egg Stir-Fry</div><div class="reel-views">30-Minute Meal</div></div>
+        </div>
+        <div class="reel-card" onclick="fillAndFetch('https://youtube.com/shorts/Veg2KkUDSpk')">
+          <img class="reel-img" src="https://img.youtube.com/vi/Veg2KkUDSpk/mqdefault.jpg" alt="Recipe">
+          <div class="reel-vignette"></div>
+          <div class="reel-play"><div class="play-tri"></div></div>
+          <a class="reel-yt-link" href="https://youtube.com/shorts/Veg2KkUDSpk" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+          <div class="reel-info"><div class="reel-name">Viral Recipe</div><div class="reel-views">YouTube Shorts</div></div>
+        </div>
+        <div class="reel-card" onclick="fillAndFetch('https://youtube.com/shorts/Nh3SyJByG0A')">
+          <img class="reel-img" src="https://img.youtube.com/vi/Nh3SyJByG0A/mqdefault.jpg" alt="Recipe">
+          <div class="reel-vignette"></div>
+          <div class="reel-play"><div class="play-tri"></div></div>
+          <a class="reel-yt-link" href="https://youtube.com/shorts/Nh3SyJByG0A" target="_blank" onclick="event.stopPropagation()">↗ YT</a>
+          <div class="reel-info"><div class="reel-name">Easy Recipe</div><div class="reel-views">YouTube Shorts</div></div>
+        </div>
+      </div></div>
       </div>
     </div>
   </div>
@@ -486,19 +514,25 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.88);backdrop-filte
         <div style="font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="modal-total">₹0</div>
       </div>
     </div>
-    <div style="padding:0 20px;display:flex;flex-direction:column;gap:8px;">
-      <button class="modal-confirm" onclick="confirmOrder()">Confirm & go to Instamart →</button>
-      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    <div style="padding:0 20px 4px;display:flex;flex-direction:column;gap:8px;">
+      <button onclick="confirmOrder()" style="width:100%;padding:15px;background:linear-gradient(135deg,#FF5C00,#FF8C42);color:white;font-size:14px;font-weight:700;border:none;border-radius:14px;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 6px 20px rgba(255,92,0,0.35);letter-spacing:0.02em;">
+        Confirm & go to Instamart →
+      </button>
+      <button onclick="closeModal()" style="width:100%;padding:13px;background:transparent;color:rgba(245,240,232,0.45);font-size:13px;border:0.5px solid rgba(255,255,255,0.08);border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;">
+        Cancel
+      </button>
     </div>
   </div>
 </div>
 
-<div class="bottom-nav">
-  <div class="bnav-item active" id="bnav-scan" onclick="switchTab('scan')">
-    <div class="bnav-icon">🔍</div><div class="bnav-label">Scan</div>
+<div style="position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,8,0.98);backdrop-filter:blur(20px);border-top:0.5px solid rgba(255,255,255,0.08);display:flex;padding:10px 0 18px;z-index:1000;">
+  <div id="bnav-scan" onclick="switchTab('scan')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 0;">
+    <div style="font-size:24px;line-height:1;">🔍</div>
+    <div id="bnav-scan-label" style="font-size:11px;font-weight:600;color:#FF5C00;">Scan</div>
   </div>
-  <div class="bnav-item" id="bnav-wishlist" onclick="switchTab('wishlist')">
-    <div class="bnav-icon">🔖</div><div class="bnav-label">Wishlist</div>
+  <div id="bnav-wishlist" onclick="switchTab('wishlist')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 0;">
+    <div style="font-size:24px;line-height:1;">🔖</div>
+    <div id="bnav-wishlist-label" style="font-size:11px;font-weight:600;color:rgba(245,240,232,0.4);">Wishlist</div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -543,7 +577,12 @@ async function fetchReel(url){
     setLS(steps,1);await sleep(350);
     const thumbUrl=`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
     setLS(steps,2);await sleep(350);
-    const ingredients=getIngredients(title);
+    // Use preloaded data if available for this video
+    if(PRELOADED[ytId]) {
+      title = PRELOADED[ytId].title;
+      document.getElementById('result-thumb').src = thumbUrl;
+    }
+    const ingredients = PRELOADED[ytId] ? PRELOADED[ytId].items : getIngredients(title);
     document.getElementById('loading-state').classList.remove('show');
     currentIngredients=ingredients;currentServings=2;currentBaseServings=2;
     currentMeta={title,author,thumbUrl,ytId,ytUrl:inputUrl};
@@ -567,6 +606,64 @@ async function fetchReel(url){
     document.getElementById('fetch-btn').disabled=false;
   }
 }
+
+// Preloaded ingredients for known video IDs
+const PRELOADED = {
+  'Z_IbTzJ4rWU': {
+    title: 'Butter Chicken - Restaurant Style',
+    items: [
+      {name:'Fresho Chicken Breast',brand:'Fresho',qty:400,unit:'g',price:210},
+      {name:'Amul Butter',brand:'Amul',qty:3,unit:'tbsp',price:27},
+      {name:'Amul Fresh Cream',brand:'Amul',qty:100,unit:'ml',price:35},
+      {name:'MDH Butter Chicken Masala',brand:'MDH',qty:2,unit:'tbsp',price:14},
+      {name:'Onion',brand:'Fresh',qty:2,unit:'pcs',price:24},
+      {name:'Tomato',brand:'Fresh',qty:3,unit:'pcs',price:30},
+      {name:'MTR Ginger Garlic Paste',brand:'MTR',qty:1,unit:'tbsp',price:12},
+      {name:'Everest Kashmiri Chilli Powder',brand:'Everest',qty:1,unit:'tsp',price:4},
+      {name:'Amul Pure Ghee',brand:'Amul',qty:1,unit:'tbsp',price:11},
+    ]
+  },
+  'I6Cw_w3Jckw': {
+    title: 'Sweet & Sour Chicken',
+    items: [
+      {name:'Fresho Chicken Breast',brand:'Fresho',qty:300,unit:'g',price:160},
+      {name:'Heinz Tomato Ketchup',brand:'Heinz',qty:3,unit:'tbsp',price:18},
+      {name:'Borges Apple Cider Vinegar',brand:'Borges',qty:2,unit:'tbsp',price:16},
+      {name:"Ching's Soy Sauce",brand:"Ching's",qty:2,unit:'tbsp',price:10},
+      {name:'Bell Pepper (Red + Green)',brand:'Fresh',qty:2,unit:'pcs',price:50},
+      {name:'Onion',brand:'Fresh',qty:1,unit:'pcs',price:12},
+      {name:'Garlic',brand:'Fresh',qty:3,unit:'pcs',price:9},
+      {name:'Cornflour – Weikfield',brand:'Weikfield',qty:2,unit:'tbsp',price:8},
+      {name:'Saffola Gold Oil',brand:'Saffola',qty:2,unit:'tbsp',price:8},
+    ]
+  },
+  'RHQlBCLZdfg': {
+    title: 'Soy Sauce Chicken Thighs',
+    items: [
+      {name:'Fresho Chicken Thighs (Boneless)',brand:'Fresho',qty:240,unit:'g',price:140},
+      {name:"Ching's Soy Sauce",brand:"Ching's",qty:3,unit:'tbsp',price:12},
+      {name:'Garlic',brand:'Fresh',qty:4,unit:'pcs',price:12},
+      {name:'Ginger',brand:'Fresh',qty:1,unit:'inch',price:6},
+      {name:'Sesame Oil – Borges',brand:'Borges',qty:1,unit:'tbsp',price:18},
+      {name:'Honey – Dabur',brand:'Dabur',qty:1,unit:'tbsp',price:15},
+      {name:'Pillsbury Plain Flour',brand:'Pillsbury',qty:2,unit:'tbsp',price:5},
+      {name:'Spring Onion',brand:'Fresh',qty:2,unit:'pcs',price:12},
+    ]
+  },
+  'm-y8autWLkY': {
+    title: 'Tomato Egg Stir-Fry',
+    items: [
+      {name:'Nandini Farm Fresh Eggs',brand:'Nandini',qty:4,unit:'pcs',price:32},
+      {name:'Tomato',brand:'Fresh',qty:3,unit:'pcs',price:30},
+      {name:'Spring Onion (Scallion)',brand:'Fresh',qty:2,unit:'pcs',price:12},
+      {name:"Ching's Soy Sauce",brand:"Ching's",qty:1,unit:'tsp',price:4},
+      {name:'Oyster Sauce – Lee Kum Kee',brand:'Lee Kum Kee',qty:2,unit:'tsp',price:12},
+      {name:'Sugar',brand:'Fresh',qty:1,unit:'tsp',price:2},
+      {name:'Saffola Gold Oil',brand:'Saffola',qty:2,unit:'tbsp',price:8},
+      {name:'Everest Salt',brand:'Everest',qty:1,unit:'to taste',price:2},
+    ]
+  },
+};
 
 function getIngredients(title){
   const t=(title||'').toLowerCase();
@@ -1017,9 +1114,12 @@ function removeWishlist(i){wishlist.splice(i,1);renderWishlist();showToast('Remo
 function fillAndFetch(url){document.getElementById('url-input').value=url;fetchReel(url);}
 function switchTab(tab){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
-  document.getElementById('bnav-'+tab).classList.add('active');
+  // Update nav label colors
+  ['scan','wishlist'].forEach(t => {
+    const label = document.getElementById('bnav-'+t+'-label');
+    if(label) label.style.color = t===tab ? '#FF5C00' : 'rgba(245,240,232,0.4)';
+  });
   window.scrollTo(0,0);
 }
 function showToast(msg){
@@ -1044,12 +1144,15 @@ window.addEventListener('load', () => {
   const params = new URLSearchParams(window.location.search);
   const sharedUrl = params.get('url') || params.get('text') || params.get('title');
   if(sharedUrl && (sharedUrl.includes('youtube.com') || sharedUrl.includes('youtu.be') || sharedUrl.includes('instagram.com'))) {
-    // Auto-populate and trigger fetch
-    document.getElementById('url-input').value = sharedUrl;
-    // Small delay to let page render first
-    setTimeout(() => fetchReel(sharedUrl), 600);
-    // Show a toast so user knows the share was received
-    setTimeout(() => showToast('Reel received — extracting ingredients...'), 200);
+    // Make sure scan tab is active
+    switchTab('scan');
+    // Populate input
+    const input = document.getElementById('url-input');
+    if(input) input.value = sharedUrl;
+    // Show toast immediately
+    showToast('🍳 Reel received — extracting...');
+    // Wait for full render before fetching
+    setTimeout(() => fetchReel(sharedUrl), 800);
   }
 });
 
